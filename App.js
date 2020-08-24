@@ -8,7 +8,7 @@ export default function App() {
   const [startedVoice, setStarted] = useState('')
   const [results, setResults] = useState([])
   const [transcript, setTranscript] = useState([])
-
+  console.log('running refresh?')
   let timeout
 
   Voice.onSpeechStart = (e) => {
@@ -21,25 +21,17 @@ export default function App() {
   }
   Voice.onSpeechResults = (e) => {
     clearTimeout(timeout)
-    setResults(e.value)
+    setResults([...results, ...e.value])
     timeout = setTimeout(()=> {
-      setTranscript([...transcript, ...results])
-      Voice.stop()}, 3000)
+      Voice.stop()}, 2500)
   }
 
   Voice.onSpeechEnd = (e) => {
     console.log('speech ended')
   }
 
-  const stopRecognition = async() => {
-    try {
-      console.log('running stop recognition')
-      await Voice.stop()
-    } catch (error) {
-      console.error(error)
-    }
-  }
   const startRecognition = async(e) => {
+    e.preventDefault()
     setRecognized('')
     setStarted('')
     try {

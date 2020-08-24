@@ -1,65 +1,59 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import Voice from '@react-native-community/voice'
 
-export default function App() {
-  const [recognizedVoice, setRecognized] = useState('')
-  const [startedVoice, setStarted] = useState('')
-  const [results, setResults] = useState([])
-  const [transcript, setTranscript] = useState([])
-  console.log('running refresh?')
-  let timeout
+import { Dialogflow_V2 } from 'react-native-dialogflow'
+import dfConfig from './apis/config/dialogflowConfig'
 
-  Voice.onSpeechStart = (e) => {
-    console.log('started')
-    setStarted('started')
-  }
-  Voice.onSpeechRecognized = (e) => {
-    console.log('recognized')
-    setRecognized('recognized')
-  }
-  Voice.onSpeechResults = (e) => {
-    clearTimeout(timeout)
-    setResults([...results, ...e.value])
-    timeout = setTimeout(()=> {
-      Voice.stop()}, 2500)
-  }
-
-  Voice.onSpeechEnd = (e) => {
-    console.log('speech ended')
-  }
-
-  const startRecognition = async(e) => {
-    e.preventDefault()
-    setRecognized('')
-    setStarted('')
-    try {
-      console.log('running')
-      await Voice.start('en-US')
-    } catch (error) {
-      console.error(error)
+export default class App extends React.Component {
+  constructor(props) {
+    super(props)
+    Dialogflow_V2.setConfiguration(
+      dfConfig.client_email,
+      dfConfig.private_key,
+      Dialogflow_V2.LANG_ENGLISH,
+      dfConfig.project_id
+    )
+    this.state = {
+      recognized: '',
+      started: false,
+      results: []
     }
   }
 
-  return (
-    <View style={styles.container}>
-      <Text>Hello, I am Kitchen Kevin</Text>
-      <Text>
-        Conversation Text Log
-      </Text>
-      {results.map((sentence, idx) => {
-        return(
-          <Text key={idx}>
-            {sentence}
-          </Text>
-        )
-      })}
-      <Button onPress={startRecognition} title="Talk To Kevin!">
-      </Button>
-      <StatusBar style="auto" />
-    </View>
-  );
+  initiateConversation() {
+    Dialogflow_V2.startListening(result=>{
+      console.log(result)
+
+      this.setState({
+        results: [...this.state.results, "You: " + result.queryResult.queryText, "Kevin: " + result.queryResult.fulfillmentText]
+      })
+    },
+    error=>{
+      console.log(error);
+    })
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text>Hello, I am Kitchen Kevin</Text>
+        <Text>
+          Conversation Text Log
+        </Text>
+        {this.state.results.map((result, idx) => <Text key={idx}> {result}</Text>
+        )}
+        <Button title="Talk To Kevin" onPress={() => {
+          this.initiateConversation()
+        }}/>
+        <Button title="Stop Talking to Kevin" onPress={()=> {
+          Dialogflow_V2.finishListening()
+        }}/>
+        <StatusBar style="auto" />
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -69,4 +63,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-});
+})

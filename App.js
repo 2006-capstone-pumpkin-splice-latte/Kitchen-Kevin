@@ -18,56 +18,74 @@ export default class App extends React.Component {
 			dfConfig.project_id
 		);
 		this.state = {
-			recognized     : '',
-			started        : false,
 			results        : [],
 			ingredientsArr : [],
-			ingredientsStr : ''
+      ingredientsStr : '',
+      currentRecipe: []
 		};
 	}
 
-	async componentDidMount() {
-		const testFunc = await spoonacularAPI(ingredientsStr);
-		if (testFunc.data) {
-			console.log('testFunc.data >>>>', testFunc.data);
-		}
-		// this.setState({
-		// 	title: testFunc.title,
-		// 	image: testFunc.
-		// })
-	}
+	// async componentDidMount() {
+	// 	const testFunc = await spoonacularAPI(ingredientsStr);
+	// 	if (testFunc.data) {
+	// 		console.log('testFunc.data >>>>', testFunc.data);
+	// 	}
+	// 	// this.setState({
+	// 	// 	title: testFunc.title,
+	// 	// 	image: testFunc.
+	// 	// })
+	// }
 
 	// When Kevin says let me look for recipe with those ingredients,
 	// I want to call the backend api
 
 	initiateConversation() {
 		Dialogflow_V2.startListening(
-			(result) => {
-				console.log(result.queryResult.parameters.foodIngredients);
-
-				if (result.queryResult.parameters.foodIngredients) {
-					this.setState({
-						ingredientsArr : result.queryResult.parameters.foodIngredients,
-						ingredientsStr : result.queryResult.parameters.foodIngredients.join('%2C')
-					});
-				}
-
-				this.setState({
+			async (result) => {
+        console.log(this.state)
+        let intent = result.queryResult.intent.displayName
+        this.setState({
 					results : [
 						...this.state.results,
 						`You: ${result.queryResult.queryText}`,
 						`Kevin: ${result.queryResult.fulfillmentText}. `
 					]
-				});
-
-				Tts.speak(
-					`${result.queryResult.fulfillmentText}. You currently have ${result.queryResult.parameters
-						.foodIngredients}`,
+        });
+        Tts.speak(
+					`${result.queryResult.fulfillmentText}.`,
 					{
 						iosVoiceId : 'com.apple.ttsbundle.Daniel-compact',
 						rate       : 0.5
 					}
-				);
+        )
+        if (result.queryResult.parameters.foodIngredients) {
+					this.setState({
+						ingredientsArr : result.queryResult.parameters.foodIngredients,
+						ingredientsStr : result.queryResult.parameters.foodIngredients.join('%2C')
+					});
+				}
+        if(intent === "give-ingredients - yes") {
+          const {data} = await spoonacularAPI(this.state.ingredientsStr)
+          if(data) {
+            console.log(data.analyzedInstructions)
+          }
+          // map((stepsssss) => {
+          //   console.log(stepsssss.step)
+          // })
+          // const recipe = await spoonacularAPI()
+          //get the recipe
+          //setState - TTs recipe
+          //Tts.speak(I got a recipe for "nameOfRecipe". would you like to proceed with this recipe or should i find a new recipe)
+          //data.title = recipeName
+          //data.summary = description
+        }
+        if(intent === "recipeProceed") {
+          //Tts.speak()
+        }
+        if(intent === "newRecipe") {
+          //replace old recipe with new recipe
+          //Tts.speak()
+        }
 			},
 			(error) => {
 				console.log(error);
@@ -108,5 +126,3 @@ const styles = StyleSheet.create({
 		justifyContent  : 'center'
 	}
 });
-
-// {"allRequiredParamsPresent": true, "fulfillmentMessages": [{"text": [Object]}], "fulfillmentText": "Let me pull up a recipe for those ingredients", "intent": {"displayName": "give-ingredients", "name": "projects/fullstack-capstone-286920/agent/intents/cc685737-9902-4c06-8600-be60f7f9bffa"}, "intentDetectionConfidence": 0.66938186, "languageCode": "en", "parameters": {"food-ingredients": ["potatoes", "tomato", "red wine"]}, "queryText": "Ingredients I have are potatoes tomatoes red wine"}

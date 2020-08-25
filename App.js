@@ -21,23 +21,11 @@ export default class App extends React.Component {
 			results        : [],
 			ingredientsArr : [],
       ingredientsStr : '',
-      currentRecipe: []
+      recipeSteps: [],
+      stepCount: 0,
+      recipeTitle: ''
 		};
 	}
-
-	// async componentDidMount() {
-	// 	const testFunc = await spoonacularAPI(ingredientsStr);
-	// 	if (testFunc.data) {
-	// 		console.log('testFunc.data >>>>', testFunc.data);
-	// 	}
-	// 	// this.setState({
-	// 	// 	title: testFunc.title,
-	// 	// 	image: testFunc.
-	// 	// })
-	// }
-
-	// When Kevin says let me look for recipe with those ingredients,
-	// I want to call the backend api
 
 	initiateConversation() {
 		Dialogflow_V2.startListening(
@@ -66,18 +54,20 @@ export default class App extends React.Component {
 				}
         if(intent === "give-ingredients - yes") {
           const {data} = await spoonacularAPI(this.state.ingredientsStr)
-          if(data) {
-            console.log(data.analyzedInstructions)
-          }
-          // map((stepsssss) => {
-          //   console.log(stepsssss.step)
-          // })
-          // const recipe = await spoonacularAPI()
-          //get the recipe
-          //setState - TTs recipe
-          //Tts.speak(I got a recipe for "nameOfRecipe". would you like to proceed with this recipe or should i find a new recipe)
-          //data.title = recipeName
-          //data.summary = description
+          let sentence = `I got a recipe for ${data.title}. would you like to proceed with this recipe or should I find a new recipe`
+          data.analyzedInstructions[0].steps.map((step) => {
+            this.setState({
+              recipeSteps: [...this.state.recipeSteps, step]
+            })
+          })
+          this.setState({
+            results: [...this.state.results, 'Kevin: ' + sentence]
+          })
+          Tts.speak(sentence,
+            {
+              iosVoiceId : 'com.apple.ttsbundle.Daniel-compact',
+              rate       : 0.5
+            })
         }
         if(intent === "recipeProceed") {
           //Tts.speak()

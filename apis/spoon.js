@@ -1,6 +1,7 @@
 const axios = require('axios');
 
-function spoonacularAPI() {
+// 'apples%2Cflour%2Csugar'
+function spoonacularAPI(arrOfIngr) {
 	return axios({
 		method  : 'GET',
 		url     : 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/findByIngredients',
@@ -14,7 +15,7 @@ function spoonacularAPI() {
 			number       : '1',
 			ranking      : '1',
 			ignorePantry : 'false',
-			ingredients  : 'apples%2Cflour%2Csugar'
+			ingredients  : arrOfIngr
 		}
 	})
 		.then((response) => {
@@ -30,20 +31,6 @@ function spoonacularAPI() {
 				}
 			})
 				.then((response) => {
-					// console.log('this is response.data.summary!!!!! >>>> ', response.data);
-					// console.log('end');
-					// console.log('end');
-					// console.log('end');
-					// console.log('end');
-					// console.log('end');
-					// console.log('end');
-					// console.log('end');
-					// console.log('end');
-					// console.log('end');
-					// console.log('end');
-					// console.log('end');
-					// console.log('end');
-
 					return response;
 				})
 				.catch((error) => {
@@ -55,5 +42,4 @@ function spoonacularAPI() {
 		});
 }
 
-// console.log(spoonacularAPI());
 export default spoonacularAPI;

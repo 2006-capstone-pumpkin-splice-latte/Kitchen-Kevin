@@ -23,59 +23,81 @@ export default class App extends React.Component {
       ingredientsStr : '',
       recipeSteps: [],
       stepCount: 0,
-      recipeTitle: ''
+      recipeTitle: '',
+      ttsConfig: {
+        iosVoiceId : 'com.apple.ttsbundle.Daniel-compact',
+				rate       : 0.5
+      }
 		};
 	}
 
 	initiateConversation() {
 		Dialogflow_V2.startListening(
 			async (result) => {
-        console.log(this.state)
+        console.log(result.queryResult)
         let intent = result.queryResult.intent.displayName
+        let response = result.queryResult.fulfillmentText
         this.setState({
 					results : [
 						...this.state.results,
-						`You: ${result.queryResult.queryText}`,
-						`Kevin: ${result.queryResult.fulfillmentText}. `
+						`You: ${result.queryResult.queryText}`
 					]
         });
-        Tts.speak(
-					`${result.queryResult.fulfillmentText}.`,
-					{
-						iosVoiceId : 'com.apple.ttsbundle.Daniel-compact',
-						rate       : 0.5
-					}
-        )
         if (result.queryResult.parameters.foodIngredients) {
 					this.setState({
 						ingredientsArr : result.queryResult.parameters.foodIngredients,
-						ingredientsStr : result.queryResult.parameters.foodIngredients.join('%2C')
-					});
+            ingredientsStr : result.queryResult.parameters.foodIngredients.join('%2C'),
+            results: [...this.state.results, `Kevin: ${response}`]
+          })
+          Tts.speak(response, this.state.ttsConfig)
 				}
-        if(intent === "give-ingredients - yes") {
+        else if(intent === "give-ingredients - yes") {
+          this.setState({
+            results: [...this.state.results, `Kevin: ${response}`]
+          })
+          Tts.speak(response, this.state.ttsConfig)
+
           const {data} = await spoonacularAPI(this.state.ingredientsStr)
           let sentence = `I got a recipe for ${data.title}. would you like to proceed with this recipe or should I find a new recipe`
           data.analyzedInstructions[0].steps.map((step) => {
             this.setState({
-              recipeSteps: [...this.state.recipeSteps, step]
+              recipeSteps: [...this.state.recipeSteps, step.step]
             })
           })
           this.setState({
             results: [...this.state.results, 'Kevin: ' + sentence]
           })
-          Tts.speak(sentence,
-            {
-              iosVoiceId : 'com.apple.ttsbundle.Daniel-compact',
-              rate       : 0.5
+          Tts.speak(sentence, this.state.ttsConfig)
+        }
+        else if(intent === "recipeProceed") {
+          if(this.state.stepCount === 0) {
+            let instruction = this.state.recipeSteps[this.state.stepCount]
+            Tts.speak(instruction, this.state.ttsConfig)
+            this.setState({
+              results: [...this.state.results, `Kevin: ${instruction}`],
+              stepCount: this.state.stepCount + 1
             })
+          }
         }
-        if(intent === "recipeProceed") {
-          //Tts.speak()
-        }
-        if(intent === "newRecipe") {
+        else if(intent === "newRecipe") {
           //replace old recipe with new recipe
           //Tts.speak()
         }
+        else if(intent === "nextStep") {
+
+        }
+        else if(intent === "repeatThat") {
+
+        }
+        else {
+          console.log('running else statement')
+          this.setState({
+            results: [...this.state.results, 'Kevin: ' + response]
+          })
+          console.log(response)
+          Tts.speak(response, this.state.ttsConfig)
+        }
+        console.log(this.state)
 			},
 			(error) => {
 				console.log(error);

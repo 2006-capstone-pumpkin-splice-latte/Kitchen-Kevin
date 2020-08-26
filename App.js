@@ -23,6 +23,7 @@ export default class App extends React.Component {
       ingredientsStr : '',
       recipeSteps: [],
       stepCount: 0,
+      recipeCounter: 0,
       recipeTitle: '',
       ttsConfig: {
         iosVoiceId : 'com.apple.ttsbundle.Daniel-compact',

@@ -8,9 +8,6 @@ import { Dialogflow_V2 } from 'react-native-dialogflow';
 import dfConfig from '../apis/config/dialogflowConfig';
 import { NavigationInjectedProps, withNavigation } from 'react-navigation';
 
-import { createAppContainer } from 'react-navigation';
-import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
-import { Icon } from 'react-native-elements';
 
 export default class MicrophoneScreen extends React.Component {
 	constructor(props) {
@@ -77,6 +74,7 @@ export default class MicrophoneScreen extends React.Component {
 							results   : [ ...this.state.results, `Kevin: ${instruction}` ],
 							stepCount : this.state.stepCount + 1
 						});
+						this.props.navigation.navigate('Recipe')
 					}
 				}
 				else if (intent === 'newRecipe') {
@@ -176,9 +174,8 @@ export default class MicrophoneScreen extends React.Component {
 const styles = StyleSheet.create({
 	container : {
 		flex            : 1,
-		backgroundColor : 'grey',
+		backgroundColor : 'gray',
 		alignItems      : 'center',
-		justifyContent  : 'center',
-		borderWidth     : 1
+		justifyContent  : 'center'
 	}
 });

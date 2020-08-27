@@ -337,6 +337,8 @@ PODS:
     - React
   - RNScreens (2.9.0):
     - React
+  - RNVectorIcons (7.0.0):
+    - React
   - TextToSpeech (2.0.0):
     - React
   - UMAppLoader (1.2.0)
@@ -424,6 +426,7 @@ DEPENDENCIES:
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - TextToSpeech (from `../node_modules/react-native-tts`)
   - UMAppLoader (from `../node_modules/unimodules-app-loader/ios`)
   - UMBarCodeScannerInterface (from `../node_modules/unimodules-barcode-scanner-interface/ios`)
@@ -538,6 +541,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNVectorIcons:
+    :path: "../node_modules/react-native-vector-icons"
   TextToSpeech:
     :path: "../node_modules/react-native-tts"
   UMAppLoader:
@@ -622,6 +627,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNReanimated: b5ccb50650ba06f6e749c7c329a1bc3ae0c88b43
   RNScreens: c526239bbe0e957b988dacc8d75ac94ec9cb19da
+  RNVectorIcons: da6fe858f5a65d7bbc3379540a889b0b12aa5976
   TextToSpeech: 4e2fc50c7495416c6da5a1662ad3f750c58d3c85
   UMAppLoader: 98b77b58fac12abab963f79f762ceef008c50505
   UMBarCodeScannerInterface: e1299aafa3bede8ba674e84199e9f319a0195cad
@@ -639,6 +645,6 @@ SPEC CHECKSUMS:
   Yoga: 3ebccbdd559724312790e7742142d062476b698e
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: bb3f0d2f761c712ef7a8bc1180f04a8f172d340c
+PODFILE CHECKSUM: b8b6762785b91dc3226d532b6a5cdabe8963b2bf
 
 COCOAPODS: 1.9.3

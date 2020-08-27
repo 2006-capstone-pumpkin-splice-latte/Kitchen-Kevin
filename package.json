@@ -16,12 +16,17 @@
     "react-dom": "~16.11.0",
     "react-native": "~0.62.2",
     "react-native-dialogflow": "^3.2.2",
-    "react-native-gesture-handler": "~1.6.1",
+    "react-native-elements": "^2.3.0",
+    "react-native-gesture-handler": "^1.6.1",
+    "react-native-paper": "^4.0.1",
     "react-native-reanimated": "~1.9.0",
     "react-native-screens": "~2.9.0",
     "react-native-tts": "^3.2.0",
     "react-native-unimodules": "~0.10.1",
-    "react-native-web": "~0.11.7"
+    "react-native-vector-icons": "^7.0.0",
+    "react-native-web": "~0.11.7",
+    "react-navigation": "^4.4.0",
+    "react-navigation-material-bottom-tabs": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",

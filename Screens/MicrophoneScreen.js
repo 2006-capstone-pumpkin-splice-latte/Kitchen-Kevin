@@ -1,6 +1,13 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  Button,
+  ScrollView,
+} from "react-native";
 import Voice from "@react-native-community/voice";
 import Tts from "react-native-tts";
 import spoonacularAPI from "../apis/spoon";
@@ -29,8 +36,13 @@ export default class MicrophoneScreen extends React.Component {
         iosVoiceId: "com.apple.ttsbundle.Daniel-compact",
         rate: 0.5,
       },
+      screenHeight: 0,
     };
   }
+
+  onContentSizeChange = (contentWidth, contentHeight) => {
+    this.setState({ screenHeight: contentHeight });
+  };
   pullNames(array) {
     let newArray = [];
     for (let i = 0; i < array.length; i++) {
@@ -174,12 +186,36 @@ export default class MicrophoneScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Hello, I am Kitchen Kevin</Text>
-        <Text>Conversation Text Log</Text>
-        {this.state.results.map((result, idx) => (
-          <Text key={idx}> {result}</Text>
-        ))}
+      <SafeAreaView style={styles.container}>
+        <Text style={{ fontWeight: "bold", fontSize: 30 }}>
+          Hello, I am Kitchen Kevin
+        </Text>
+        <Text style={{ fontSize: 25 }}>Conversation Text Log</Text>
+        <ScrollView
+          ref={(ref) => (this.ScrollView = ref)}
+          style={{ flex: 1 }}
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: "space-around",
+          }}
+          onContentSizeChange={() =>
+            this.ScrollView.scrollToEnd({ animated: true })
+          }
+        >
+          {this.state.results.map((result, idx) => (
+            <Text
+              style={{
+                padding: 6,
+                margin: 10,
+                fontSize: 20,
+                color: "white",
+              }}
+              key={idx}
+            >
+              {result}
+            </Text>
+          ))}
+        </ScrollView>
         <Button
           title="Talk To Kevin"
           onPress={() => {
@@ -194,7 +230,7 @@ export default class MicrophoneScreen extends React.Component {
         />
         {/* <Button title="tts-speak" onPress={this.handleTtsPress} /> */}
         <StatusBar style="auto" />
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -205,5 +241,6 @@ const styles = StyleSheet.create({
     backgroundColor: "gray",
     alignItems: "center",
     justifyContent: "center",
+    borderBottomWidth: 1,
   },
 });

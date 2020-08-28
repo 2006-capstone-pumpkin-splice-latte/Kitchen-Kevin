@@ -40,9 +40,6 @@ export default class MicrophoneScreen extends React.Component {
     };
   }
 
-  onContentSizeChange = (contentWidth, contentHeight) => {
-    this.setState({ screenHeight: contentHeight });
-  };
   pullNames(array) {
     let newArray = [];
     for (let i = 0; i < array.length; i++) {
@@ -76,7 +73,7 @@ export default class MicrophoneScreen extends React.Component {
           Tts.speak(response, this.state.ttsConfig);
 
           const { data } = await spoonacularAPI(this.state.ingredientsArr);
-          // let sentence = `I got a recipe for ${data.title}. Would you like to proceed with this recipe or should I find a new recipe?`;
+
           let allIngredients = this.pullNames(data.extendedIngredients);
           let sentence = `I got a recipe for ${
             data.title
@@ -124,8 +121,6 @@ export default class MicrophoneScreen extends React.Component {
             );
 
             let allIngredients = this.pullNames(data.extendedIngredients);
-
-            // let sentence = `I got a new recipe for ${data.title}. Would you like to proceed with this recipe or should I find another recipe?`;
 
             let sentence = `I got a new recipe for ${
               data.title

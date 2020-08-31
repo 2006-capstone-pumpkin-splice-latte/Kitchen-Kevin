@@ -3,7 +3,8 @@
     "start": "react-native start",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@react-native-community/voice": "^1.1.8",
@@ -12,6 +13,7 @@
     "expo-splash-screen": "^0.5.0",
     "expo-status-bar": "^1.0.2",
     "expo-updates": "~0.2.10",
+    "patch-package": "^6.2.2",
     "react": "~16.11.0",
     "react-dom": "~16.11.0",
     "react-native": "~0.62.2",

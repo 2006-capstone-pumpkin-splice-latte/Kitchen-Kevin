@@ -26,6 +26,7 @@ export default class MicrophoneScreen extends React.Component {
     );
     this.state = {
       results: [],
+      recipeImage: '',
       ingredientsArr: [],
       allIngredientsArr: [],
       recipeSteps: [],
@@ -89,6 +90,8 @@ export default class MicrophoneScreen extends React.Component {
           this.setState({
             results: [...this.state.results, "Kevin: " + sentence],
             allIngredientsArr: allIngredients,
+            recipeImage: data.image,
+            recipeTitle: data.title
           });
 
           Tts.speak(sentence, this.state.ttsConfig);
@@ -100,7 +103,11 @@ export default class MicrophoneScreen extends React.Component {
               results: [...this.state.results, `Kevin: ${instruction}`],
               stepCount: this.state.stepCount + 1,
             });
-            this.props.navigation.navigate("Recipe");
+            this.props.navigation.navigate("Recipe", {
+              recipeSteps: [ ...this.state.recipeSteps ],
+              recipeImage: this.state.recipeImage,
+              recipeTitle: this.state.recipeTitle
+            });
           }
         } else if (intent === "newRecipe") {
           //replace old recipe with new recipe

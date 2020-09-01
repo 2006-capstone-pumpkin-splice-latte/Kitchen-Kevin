@@ -38,20 +38,6 @@ const TabNavigator = createMaterialBottomTabNavigator({
 				</View>
 			)
 		}
-  },
-	Transcript : {
-		screen            : Transcript,
-		navigationOptions : {
-			tabBarLabel   : 'Transcript',
-			activeColor   : 'dodgerblue',
-			inactiveColor : 'gray',
-			barStyle      : { backgroundColor: 'pink' },
-			tabBarIcon    : () => (
-				<View>
-					<Icon name={'person'} size={30} style={{ color: 'black' }} />
-				</View>
-			)
-		}
   }
 });
 

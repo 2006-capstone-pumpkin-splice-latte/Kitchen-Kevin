@@ -7,7 +7,6 @@ export default class TranscriptScreen extends Component {
 		super(props)
   }
   render() {
-    const transcript = this.props.navigation.getParam('transcript', [])
 		return (
 			<SafeAreaView style={styles.container}>
 				<Text style={styles.title1}>Kitchen Kevin</Text>

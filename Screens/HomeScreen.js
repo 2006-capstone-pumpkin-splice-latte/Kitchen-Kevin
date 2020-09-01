@@ -1,10 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, ScrollView, View, Button, Image, TouchableOpacity,SafeAreaView } from 'react-native';
 import Voice from '@react-native-community/voice';
 import Tts from 'react-native-tts';
 import spoonacularAPI from '../apis/spoon';
 import { Dialogflow_V2 } from 'react-native-dialogflow';
 import dfConfig from '../apis/config/dialogflowConfig';
+import styled from "styled-components";
 
 export default class HomeScreen extends React.Component {
 	constructor(props) {
@@ -174,11 +175,6 @@ export default class HomeScreen extends React.Component {
 					});
 					Tts.speak(response, this.state.ttsConfig);
 				}
-				// this.props.navigation.setParams({ transcript: this.state.transcript })
-				// console.log(this.props.navigation.state.params.transcript)
-				this.props.navigation.navigate('Transcript', {
-					transcript: this.state.transcript
-				});
 			},
 			(error) => {
 				console.log(error);
@@ -188,8 +184,21 @@ export default class HomeScreen extends React.Component {
 
 	render() {
     return(
-      <View style={styles.container}>
-        <Image source={require("../assets/kindpng_147581.png")} style={styles.kevin}/>
+      <SafeAreaView style={styles.container}>
+				<ScrollView
+					ref={(ref) => (this.ScrollView = ref)}
+					style={{ flex: 1 }}
+					contentContainerStyle={{
+						flexGrow       : 1
+					}}
+					onContentSizeChange={() => this.ScrollView.scrollToEnd({ animated: true })}
+				>
+					{this.state.transcript.map((result, idx) => (
+						<Text style={styles.textlog} key={idx}>
+							{result}
+						</Text>
+					))}
+				</ScrollView>
         <Text style={styles.titleText}>Talk to Kevin</Text>
 
         <TouchableOpacity style={styles.button} onPress={()=>{this.initiateConversation()}}>
@@ -201,7 +210,7 @@ export default class HomeScreen extends React.Component {
 						Dialogflow_V2.finishListening();
 					}}
 				/>
-      </View>
+      </SafeAreaView>
     )
   }
 }

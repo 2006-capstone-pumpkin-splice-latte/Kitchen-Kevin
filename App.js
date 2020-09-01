@@ -6,8 +6,8 @@ import { createAppContainer } from 'react-navigation';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import { Icon } from 'react-native-elements';
 
+import Transcript from './Screens/TranscriptScreen';
 import HomeScreen from './Screens/HomeScreen';
-import MicrophoneScreen from './Screens/MicrophoneScreen';
 import RecipeScreen from './Screens/RecipeScreen'
 
 const TabNavigator = createMaterialBottomTabNavigator({
@@ -39,8 +39,8 @@ const TabNavigator = createMaterialBottomTabNavigator({
 			)
 		}
   },
-	Microphone : {
-		screen            : MicrophoneScreen,
+	Transcript : {
+		screen            : Transcript,
 		navigationOptions : {
 			tabBarLabel   : 'Transcript',
 			activeColor   : 'dodgerblue',

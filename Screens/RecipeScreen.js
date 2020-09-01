@@ -3,6 +3,7 @@ import { StatusBar, SafeAreaView, FlatList } from 'react-native';
 // import { SafeAreaView } from 'react-navigation';
 import styled from 'styled-components';
 // import { StatusBar } from 'expo-status-bar';
+// Comment
 
 export default class RecipeScreen extends Component {
 	constructor(props) {

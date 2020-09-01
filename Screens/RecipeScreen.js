@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StatusBar, SafeAreaView } from 'react-native';
+import { StatusBar, SafeAreaView, FlatList } from 'react-native';
 // import { SafeAreaView } from 'react-navigation';
 import styled from 'styled-components';
 // import { StatusBar } from 'expo-status-bar';
@@ -25,6 +25,21 @@ export default class RecipeScreen extends Component {
 						</MainRecipe>
 					</SafeAreaView>
 				</RecipeBackground>
+				<DirectionsContainer>
+					<Text dark heavy large>
+						Directions
+					</Text>
+					<Text dark small>
+						{recipeSteps ? `${recipeSteps.length + 1} Steps` : `No Steps`}
+					</Text>
+					<Directions>
+						<FlatList
+							data={recipeSteps}
+							keyExtractor={(item, index) => 'key' + index}
+							renderItem={({ item }) => <Text>{`\u2022 ${item}`}</Text>}
+						/>
+					</Directions>
+				</DirectionsContainer>
 			</Container>
 		);
 	}
@@ -42,7 +57,10 @@ const Text = styled.Text`
 	fontWeight: 600;
 `;
 
-const RecipeBackground = styled.ImageBackground`width: 100%;`;
+const RecipeBackground = styled.ImageBackground`
+	width: 100%;
+	height: 50%;
+`;
 
 const MenuBar = styled.View`
 	flex-direction: row;
@@ -57,7 +75,7 @@ const Back = styled.View`
 
 const MainRecipe = styled.View`
 	padding: 0 32px;
-	margin: 200px 0 32px 0;
+	margin: 250px 0 32px 0;
 `;
 
 const Divider = styled.View`
@@ -66,6 +84,18 @@ const Divider = styled.View`
 	width: 180px;
 	margin: 8px 0;
 `;
+
+const DirectionsContainer = styled.View`
+	margin-top: -20px;
+	padding: 32px;
+	background-color: #fff;
+	border-top-left-radius: 24px;
+	border-top-right-radius: 24px;
+`;
+
+const Directions = styled.View`margin-top: 16px;`;
+
+const Direction = styled.View``;
 
 // 		return (
 // 			<SafeAreaView style={styles.container}>

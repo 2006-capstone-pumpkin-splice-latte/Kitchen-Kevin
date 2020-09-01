@@ -122,7 +122,7 @@ export default class MicrophoneScreen extends React.Component {
               stepCount: this.state.stepCount + 1,
             });
             this.props.navigation.navigate("Recipe", {
-              recipeSteps: this.state.recipeSteps,
+              recipeSteps: [...this.state.recipeSteps],
               recipeImage: this.state.recipeImage,
               recipeTitle: this.state.recipeTitle,
             });
@@ -236,7 +236,6 @@ export default class MicrophoneScreen extends React.Component {
             Dialogflow_V2.finishListening();
           }}
         />
-        <Button title="tts-stop" onPress={Tts.stop()} />
         <StatusBar style="auto" />
       </SafeAreaView>
     );

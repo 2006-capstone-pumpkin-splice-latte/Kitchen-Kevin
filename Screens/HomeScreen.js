@@ -210,6 +210,12 @@ export default class HomeScreen extends React.Component {
 						Dialogflow_V2.finishListening();
 					}}
 				/>
+				<Button
+					title="Interrupt Kevin"
+					onPress={() => {
+						Tts.stop()
+						Voice.start()
+					}}/>
       </SafeAreaView>
     )
   }

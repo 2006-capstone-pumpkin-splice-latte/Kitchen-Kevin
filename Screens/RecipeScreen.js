@@ -42,8 +42,9 @@ export default class RecipeScreen extends Component {
           return <Text key={index}>{step}</Text>;
         })} */}
         <FlatList
+          style={styles.textlog}
           data={recipeSteps}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item, index) => "key" + index}
           renderItem={({ item }) => <Text>{`\u2022 ${item}`}</Text>}
         />
       </SafeAreaView>
@@ -70,5 +71,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     margin: 12,
     padding: 12,
+  },
+  textlog: {
+    padding: 6,
+    margin: 10,
+    fontSize: 20,
+    color: "white",
   },
 });

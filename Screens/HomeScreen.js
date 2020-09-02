@@ -51,15 +51,6 @@ export default class HomeScreen extends React.Component {
     });
   }
 
-  // pullNames(array) {
-  // 	let newArray = [];
-  // 	for (let i = 0; i < array.length; i++) {
-  // 		let currentElement = array[i];
-  // 		newArray.push(currentElement.name);
-  // 	}
-  // 	return newArray;
-  // }
-
   pullIngredients = (array) => {
     let newArray = [];
     for (let i = 0; i < array.length; i++) {

@@ -28,8 +28,9 @@ export default class HomeScreen extends React.Component {
     );
     this.state = {
       transcript: [],
-      ingredientsArr: [],
-      allIngredientsArr: [],
+			ingredientsArr: [],
+			allIngredientsAmounts: {},
+      allIngredientsNames: [],
       recipeImage: "",
       recipeSteps: [],
       stepCount: 0,
@@ -40,7 +41,7 @@ export default class HomeScreen extends React.Component {
         rate: 0.5,
       },
       screenHeight: 0,
-    };
+		};
     Tts.addEventListener("tts-start", (event) => {
       console.log("TTS STARTED HAHAHAA");
       Voice.stop();
@@ -51,22 +52,36 @@ export default class HomeScreen extends React.Component {
     });
   }
 
-  pullIngredients = (array) => {
-    let newArray = [];
-    for (let i = 0; i < array.length; i++) {
-      let currentElement = array[i];
-      newArray.push({
-        name: currentElement.name,
-        quantity: currentElement.originalString,
-      });
-    }
-    return newArray;
-  };
-  pullIngredientNames = (array) => {
-    return array.map((ingredient) => {
-      return ingredient.name;
-    });
-  };
+  pullIngredients=(array)=> {
+		let newObj = {
+			names: [],
+			amounts: {}
+		}
+		for (let i = 0; i < array.length; i++) {
+			let x = array[i];
+			newObj.names.push(x.name)
+			newObj.amounts[x.name] = x.originalString;
+		}
+		return newObj;
+	}
+
+	pullAmountResponse = (ingrNames, ingrAmounts, userQuery) => {
+		let response = 'You will need '
+		for (let i=0; i<userQuery.length; i++) {
+			for (let j=0; j<ingrNames.length; j++) {
+				if(ingrNames[j].includes(userQuery[i])) {
+					let key = ingrNames[j]
+					if (i === userQuery.length - 1) {
+						response += `and ${ingrAmounts[key]}.`
+					}
+					else {
+						response += `${ingrAmounts[key]}, `
+					}
+				}
+			}
+		}
+		return response
+	}
 
   initiateConversation() {
     console.log("running init conversation");
@@ -81,6 +96,7 @@ export default class HomeScreen extends React.Component {
           ],
         });
         if (result.queryResult.parameters.foodIngredients) {
+					console.log(result.queryResult.parameters.foodIngredients)
           this.setState({
             ingredientsArr: result.queryResult.parameters.foodIngredients,
             transcript: [...this.state.transcript, `Kevin: ${response}`],
@@ -93,30 +109,30 @@ export default class HomeScreen extends React.Component {
           Tts.speak(response, this.state.ttsConfig);
 
           const { data } = await spoonacularAPI(this.state.ingredientsArr);
-
-          let allIngredients = this.pullIngredients(data.extendedIngredients);
-          let allIngredientsNames = this.pullIngredientNames(allIngredients);
-
-          let sentence = `I got a recipe for ${
-            data.title
-          }. You will also need ${allIngredientsNames.join(
-            ", "
-          )}. Would you like to proceed with this recipe or should I find a new recipe?`;
+          let ingredientsObj = this.pullIngredients(data.extendedIngredients);
 
           data.analyzedInstructions[0].steps.map((step) => {
             this.setState({
               recipeSteps: [...this.state.recipeSteps, step.step],
             });
-          });
+					});
+					let sentence = `I got a recipe for ${
+            data.title
+          }. You will need ${ingredientsObj.names.join(
+            ", "
+          )}. Would you like to proceed with this recipe or should I find a new recipe?`;
           this.setState({
             transcript: [...this.state.transcript, "Kevin: " + sentence],
-            allIngredientsArr: allIngredientsNames,
+						allIngredientsNames: ingredientsObj.names,
+						allIngredientsAmounts: ingredientsObj.amounts,
             recipeImage: data.image,
             recipeTitle: data.title,
           });
-
           Tts.speak(sentence, this.state.ttsConfig);
         } else if (intent === "recipeProceed") {
+					this.setState({
+						stepCount: 0,
+					})
           if (this.state.stepCount === 0) {
             let instruction = this.state.recipeSteps[this.state.stepCount];
             Tts.speak(instruction, this.state.ttsConfig);
@@ -130,7 +146,20 @@ export default class HomeScreen extends React.Component {
               recipeTitle: this.state.recipeTitle,
             });
           }
-        } else if (intent === "newRecipe") {
+				}
+				else if(intent === 'allIngredientsAmount') {
+					console.log('ALLAMOUNT INTENT')
+					console.log(result)
+				}
+				else if(intent === 'ingredientAmount') {
+					let query = result.queryResult.parameters['food-ingredients']
+					let amountResponse = this.pullAmountResponse(this.state.allIngredientsNames, this.state.allIngredientsAmounts, query)
+					Tts.speak(amountResponse, this.state.ttsConfig)
+					this.setState({
+						transcript: [...this.state.transcript, `Kevin: ${amountResponse}`]
+					})
+				}
+				else if (intent === "newRecipe") {
           //replace old recipe with new recipe
           if (this.state.recipeCounter === 4) {
             let lastRecipeMessage = "Sorry, homie, there are no more recipes.";
@@ -141,24 +170,26 @@ export default class HomeScreen extends React.Component {
                 `Kevin: ${lastRecipeMessage}`,
               ],
             });
-          } else {
+					}
+					else {
             this.setState({
               recipeCounter: this.state.recipeCounter + 1,
               recipeSteps: [],
               recipeImage: "",
-              recipeTitle: "",
+							recipeTitle: "",
+							allIngredientsNames: [],
+							allIngredientsAmounts: {}
             });
             const { data } = await spoonacularAPI(
               this.state.ingredientsArr,
               this.state.recipeCounter
             );
 
-            let allIngredients = this.pullIngredients(data.extendedIngredients);
-            let allIngredientsNames = this.pullIngredientNames(allIngredients);
+            let ingredientsObj = this.pullIngredients(data.extendedIngredients);
 
             let sentence = `I got a new recipe for ${
               data.title
-            }. You will need ${allIngredientsNames.join(
+            }. You will need ${ingredientsObj.names.join(
               ", "
             )}. Would you like to proceed with this recipe or should I find another recipe?`;
 
@@ -169,7 +200,8 @@ export default class HomeScreen extends React.Component {
             });
             this.setState({
               transcript: [...this.state.transcript, "Kevin: " + sentence],
-              allIngredientsArr: allIngredientsNames,
+							allIngredientsArr: ingredientsObj.names,
+							allIngredientsAmounts: ingredientsObj.amounts,
               recipeImage: data.image,
               recipeTitle: data.title,
             });
@@ -193,17 +225,15 @@ export default class HomeScreen extends React.Component {
               stepCount: this.state.stepCount + 1,
             });
           }
-        } else {
-          // else if (intent === "repeatThat") {
-          //   let lastResponse = this.state.results[
-          //     this.state.results.length - 2
-          //   ].slice(6);
-          //   Tts.speak(`Sure, I said, ${lastResponse}`, this.state.ttsConfig);
-          //   this.setState({
-          //     results: [...this.state.results, `Kevin: ${lastResponse}`],
-          //   });
-          // }
-          console.log("running else statement");
+				}
+				else if(intent==='rapGod'){
+					this.setState({
+            transcript: [...this.state.transcript, "Kevin: " + response],
+					});
+
+					Tts.speak(response, {...this.state.ttsConfig, rate: 0.58});
+
+				} else {
           this.setState({
             transcript: [...this.state.transcript, "Kevin: " + response],
           });
@@ -291,3 +321,14 @@ const styles = StyleSheet.create({
     width: 70,
   },
 });
+
+
+// else if (intent === "repeatThat") {
+          //   let lastResponse = this.state.results[
+          //     this.state.results.length - 2
+          //   ].slice(6);
+          //   Tts.speak(`Sure, I said, ${lastResponse}`, this.state.ttsConfig);
+          //   this.setState({
+          //     results: [...this.state.results, `Kevin: ${lastResponse}`],
+          //   });
+          // }

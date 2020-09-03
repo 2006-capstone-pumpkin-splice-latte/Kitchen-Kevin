@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StatusBar, SafeAreaView, ScrollView } from "react-native";
+import { StatusBar, SafeAreaView, ScrollView, View } from "react-native";
 // import { SafeAreaView } from 'react-navigation';
 import styled from "styled-components";
 // import { StatusBar } from 'expo-status-bar';
@@ -9,12 +9,22 @@ export default class RecipeScreen extends Component {
   constructor(props) {
     super(props);
   }
+  createIngredientsList(obj) {
+    let ingredientsArray = [];
+    for (let key in obj) {
+      ingredientsArray.push(obj[key]);
+    }
+    return ingredientsArray;
+  }
 
   render() {
     const recipeSteps = this.props.navigation.getParam("recipeSteps");
     const recipeImage = this.props.navigation.getParam("recipeImage");
     const title = this.props.navigation.getParam("recipeTitle");
-
+    const allIngredientsObj = this.props.navigation.getParam(
+      "allIngredientsAmounts"
+    );
+    const allIngredientsList = this.createIngredientsList(allIngredientsObj);
     return (
       <Container>
         <StatusBar barStyle="light-content" />
@@ -34,13 +44,24 @@ export default class RecipeScreen extends Component {
           }}
         >
           <DirectionsContainer>
-            {/* <Text dark heavy large> */}
+            {allIngredientsList ? (
+              allIngredientsList.map((ingredient, index) => {
+                return (
+                  <Text small dark key={index}>
+                    {ingredient}
+                  </Text>
+                );
+              })
+            ) : (
+              <Text></Text>
+            )}
             {!recipeSteps ? (
               <Text dark heavy large>
                 No recipe
               </Text>
             ) : (
               <Text dark large style={{ fontSize: 20 }}>
+                {"\n"}
                 Directions
               </Text>
             )}
@@ -54,6 +75,7 @@ export default class RecipeScreen extends Component {
                 recipeSteps.map((step, index) => {
                   return (
                     <Text dark small key={index}>
+                      {"\n"}
                       {index + 1}. {step}
                       {"\n"}
                     </Text>

@@ -1,7 +1,6 @@
 import React from "react";
 import {
   StyleSheet,
-  Text,
   ScrollView,
   View,
   Button,
@@ -248,24 +247,34 @@ export default class HomeScreen extends React.Component {
 
   render() {
     return (
+      <Container>
       <SafeAreaView style={styles.container}>
         <ScrollView
           ref={(ref) => (this.ScrollView = ref)}
-          style={{ flex: 1 }}
-          contentContainerStyle={{
-            flexGrow: 1,
-          }}
+          // style={{ flex: 1 }}
+          // contentContainerStyle={{
+          //   flexGrow: 1,
+          // }}
           onContentSizeChange={() =>
             this.ScrollView.scrollToEnd({ animated: true })
           }
         >
           {this.state.transcript.map((result, idx) => (
-            <Text style={styles.textlog} key={idx}>
+            result.slice(0,3)==='You'?
+            <TextContainer user key={idx}>
+              <Text small dark>
               {result}
             </Text>
+            </TextContainer>
+            :
+            <TextContainer kevin key={idx}>
+              <Text black small>
+              {result}
+            </Text>
+            </TextContainer>
+
           ))}
         </ScrollView>
-        <Text style={styles.titleText}>Talk to Kevin</Text>
 
         <TouchableOpacity
           style={styles.button}
@@ -292,6 +301,7 @@ export default class HomeScreen extends React.Component {
           }}
         />
       </SafeAreaView>
+      </Container>
     );
   }
 }
@@ -299,13 +309,12 @@ export default class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#87CEFA",
     alignItems: "center",
     justifyContent: "center",
   },
   titleText: {
     fontSize: 20,
-    fontFamily: "Chalkduster",
+
   },
   kevin: {
     height: 100,
@@ -322,13 +331,25 @@ const styles = StyleSheet.create({
   },
 });
 
+const Container = styled.View`
+  flex: 1;
+  background-color: #8D99AE;
+`;
 
-// else if (intent === "repeatThat") {
-          //   let lastResponse = this.state.results[
-          //     this.state.results.length - 2
-          //   ].slice(6);
-          //   Tts.speak(`Sure, I said, ${lastResponse}`, this.state.ttsConfig);
-          //   this.setState({
-          //     results: [...this.state.results, `Kevin: ${lastResponse}`],
-          //   });
-          // }
+const TextContainer = styled.View`
+  flex:1;
+  align-items: flex-end;
+  margin:8px;
+  margin-left:${(props) => (props.user ? '140px': '10px')}
+  margin-right:${(props) => (props.kevin ? '140px': '10px')}
+
+`
+const Text = styled.Text`
+  background-color: ${(props) => (props.black?'#22223B':'#FEEAFA')};
+  padding:10px;
+  color: ${(props) => (props.dark ? "#000" : "#FFF")};
+  font-family: "AvenirNext-Regular";
+  font-size: ${(props) => (props.small ? "15px" : "25px")};
+  font-weight: 600;
+  font-style: ${(props) => (props.italic ? "italic" : "normal")};
+`;

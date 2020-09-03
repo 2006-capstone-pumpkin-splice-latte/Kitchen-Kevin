@@ -1,12 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import {View} from 'react-native';
 
 
 import { createAppContainer } from 'react-navigation';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
-import { Icon } from 'react-native-elements';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
-import Transcript from './Screens/TranscriptScreen';
 import HomeScreen from './Screens/HomeScreen';
 import RecipeScreen from './Screens/RecipeScreen'
 import InstructionsScreen from './Screens/InstructionsScreen';
@@ -18,10 +17,10 @@ const TabNavigator = createMaterialBottomTabNavigator({
 			tabBarLabel   : 'Home',
 			activeColor   : 'dodgerblue',
 			inactiveColor : 'gray',
-			barStyle      : { backgroundColor: 'pink' },
+			barStyle      : { backgroundColor: '#E5E5E5' },
 			tabBarIcon    : () => (
 				<View>
-					<Icon name={'home'} size={30} style={{ color: 'black' }} />
+					<FontAwesome5 name='home' size={23}  />
 				</View>
 			)
 		}
@@ -32,10 +31,10 @@ const TabNavigator = createMaterialBottomTabNavigator({
 			tabBarLabel   : 'Recipe',
 			activeColor   : 'dodgerblue',
 			inactiveColor : 'gray',
-			barStyle      : { backgroundColor: 'pink' },
+			barStyle      : { backgroundColor: '#E5E5E5' },
 			tabBarIcon    : () => (
 				<View>
-					<Icon name={'person'} size={30} style={{ color: 'black' }} />
+					<FontAwesome5 name='utensils' size={23}  />
 				</View>
 			)
 		}
@@ -43,13 +42,13 @@ const TabNavigator = createMaterialBottomTabNavigator({
 	Instructions: {
     screen: InstructionsScreen,
     navigationOptions : {
-			tabBarLabel   : 'How to use',
+			tabBarLabel   : 'Instructions',
 			activeColor   : 'dodgerblue',
 			inactiveColor : 'gray',
-			barStyle      : { backgroundColor: 'pink' },
+			barStyle      : { backgroundColor: '#E5E5E5' },
 			tabBarIcon    : () => (
 				<View>
-					<Icon name={'person'} size={30} style={{ color: 'black' }} />
+					<FontAwesome5 name='book' size={23}  />
 				</View>
 			)
 		}

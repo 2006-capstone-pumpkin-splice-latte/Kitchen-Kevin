@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { StatusBar, SafeAreaView, ScrollView } from "react-native";
 import styled from "styled-components";
-// import { StatusBar } from 'expo-status-bar';
 
 export default class RecipeScreen extends Component {
   constructor(props) {

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Image, StatusBar, SafeAreaView, ScrollView, Text } from "react-native";
+import { Image, StatusBar, SafeAreaView, ScrollView, Text, Button } from "react-native";
 import styled from "styled-components";
 
 export default class InstructionsScreen extends Component {
@@ -17,22 +17,19 @@ export default class InstructionsScreen extends Component {
         <CustomImage
           source={require('../assets/Kitchen_Kevin_Logo.png')}
           />
-          {/* </Container> */}
-          {/* <Container> */}
-        <Title white>How to use Kitchen Kevin: </Title>
-        {/* </Container> */}
-        {/* <Container> */}
-        <ContentText white>
+        <RoundedTouchableOpacity>
+        <Title>How to use: </Title>
+        <ContentText>
         1. To start, press microphone on the home screen to tell Kevin what ingredients you have.
         {'\n'}
-        2. When you decide on a recipe, say "Proceed" to begin cooking.
+        2. To choose a recipe, say "proceed" to begin cooking.
         {'\n'}
         3. If you're curious how much of an ingredient you need, ask Kevin.
         {'\n'}
-        4. Say "next step" to go to the next step.
-
+        4. To tell Kevin to go to the next step, say "next step."
         </ContentText>
-      </Container>
+        </RoundedTouchableOpacity>
+        </Container>
         </RecipeBackground>
     );
   }
@@ -48,9 +45,6 @@ const Container = styled.View`
 const CustomImage = styled.Image`
   width: 200px;
   height: 200px;
-  border-color: ${props => props.light || 'white'};
-  border-width: 2px;
-  border-radius: 50px;
 `
 const Title = styled.Text`
   font-size: 24px;
@@ -67,3 +61,16 @@ const RecipeBackground = styled.ImageBackground`
   width: 100%;
   height: 100%;
 `;
+
+const RoundedTouchableOpacity = styled.TouchableOpacity`
+  height: 250px;
+  border-bottom-left-radius: 30px;
+  border-top-right-radius: 30px;
+  width: 350px;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  margin-top: 16px;
+  opacity: 0.8;
+`
+

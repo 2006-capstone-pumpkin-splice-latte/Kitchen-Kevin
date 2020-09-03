@@ -10,7 +10,8 @@ export default class InstructionsScreen extends Component {
   render() {
 
     return (
-        <RecipeBackground
+
+      <RecipeBackground
           source={require('../assets/HowTo_Background.jpg')}
         >
           <Container>

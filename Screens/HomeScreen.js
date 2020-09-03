@@ -14,6 +14,7 @@ import spoonacularAPI from "../apis/spoon";
 import { Dialogflow_V2 } from "react-native-dialogflow";
 import dfConfig from "../apis/config/dialogflowConfig";
 import styled from "styled-components";
+import FloatingButton from '../MasterButton'
 
 export default class HomeScreen extends React.Component {
   constructor(props) {
@@ -275,7 +276,7 @@ export default class HomeScreen extends React.Component {
 
           ))}
         </ScrollView>
-
+            <FloatingButton style={{ bottom: 0 }}/>
         <TouchableOpacity
           style={styles.button}
           onPress={() => {

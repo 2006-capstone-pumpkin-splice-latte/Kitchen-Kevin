@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import { StatusBar, SafeAreaView, ScrollView } from "react-native";
-// import { SafeAreaView } from 'react-navigation';
 import styled from "styled-components";
-// import { StatusBar } from 'expo-status-bar';
-// Comment
 
 export default class RecipeScreen extends Component {
   constructor(props) {
@@ -125,40 +122,3 @@ const Directions = styled.View`
   margin-top: 16px;
 `;
 
-// 		return (
-// 			<SafeAreaView style={styles.container}>
-// 				<Image
-// 					source={{
-// 						width  : 350,
-// 						height : 200,
-// 						uri    : recipeImage
-// 					}}
-// 				/>
-// 				<Text style={styles.title}>{title}</Text>
-// 				<Text style={styles.textBlock}>{recipeSteps}</Text>
-// 			</SafeAreaView>
-// 		);
-// 	}
-// }
-
-// const styles = StyleSheet.create({
-// 	container : {
-// 		flex            : 1,
-// 		backgroundColor : '#87CEFA',
-// 		alignItems      : 'center',
-// 		justifyContent  : 'center'
-// 	},
-// 	textBlock : {
-// 		margin  : 12,
-// 		padding : 12
-// 		// borderWidth     : 1,
-// 		// borderColor     : '#ccc',
-// 		// backgroundColor : 'white'
-// 	},
-// 	title     : {
-// 		fontSize   : 24,
-// 		fontWeight : 'bold',
-// 		margin     : 12,
-// 		padding    : 12
-// 	}
-// });

@@ -9,6 +9,7 @@ import { Icon } from 'react-native-elements';
 import Transcript from './Screens/TranscriptScreen';
 import HomeScreen from './Screens/HomeScreen';
 import RecipeScreen from './Screens/RecipeScreen'
+import InstructionsScreen from './Screens/InstructionsScreen';
 
 const TabNavigator = createMaterialBottomTabNavigator({
 	Home : {
@@ -29,6 +30,20 @@ const TabNavigator = createMaterialBottomTabNavigator({
     screen: RecipeScreen,
     navigationOptions : {
 			tabBarLabel   : 'Recipe',
+			activeColor   : 'dodgerblue',
+			inactiveColor : 'gray',
+			barStyle      : { backgroundColor: 'pink' },
+			tabBarIcon    : () => (
+				<View>
+					<Icon name={'person'} size={30} style={{ color: 'black' }} />
+				</View>
+			)
+		}
+	},
+	Instructions: {
+    screen: InstructionsScreen,
+    navigationOptions : {
+			tabBarLabel   : 'How to use',
 			activeColor   : 'dodgerblue',
 			inactiveColor : 'gray',
 			barStyle      : { backgroundColor: 'pink' },

@@ -1,9 +1,6 @@
 import React, { Component } from "react";
-import { StatusBar, SafeAreaView, ScrollView, View } from "react-native";
-// import { SafeAreaView } from 'react-navigation';
+import { StatusBar, SafeAreaView, ScrollView } from "react-native";
 import styled from "styled-components";
-// import { StatusBar } from 'expo-status-bar';
-// Comment
 
 export default class RecipeScreen extends Component {
   constructor(props) {
@@ -31,7 +28,7 @@ export default class RecipeScreen extends Component {
         <RecipeBackground source={{ uri: recipeImage }}>
           <SafeAreaView>
             <MainRecipe>
-              <Text>{title}</Text>
+              <Title>{title}</Title>
               <Divider />
             </MainRecipe>
           </SafeAreaView>
@@ -44,7 +41,16 @@ export default class RecipeScreen extends Component {
           }}
         >
           <DirectionsContainer>
-            {allIngredientsList ? (
+            {allIngredientsList.length > 0 ? (
+              <Text dark large style={{ fontSize: 20 }}>
+                Ingredients
+              </Text>
+            ) : (
+              <Text></Text>
+            )}
+            <Divider dark />
+
+            {allIngredientsList && allIngredientsList.length > 0 ? (
               allIngredientsList.map((ingredient, index) => {
                 return (
                   <Text small dark key={index}>
@@ -67,7 +73,7 @@ export default class RecipeScreen extends Component {
             )}
             <Divider dark />
             <Text dark small italic>
-              {recipeSteps ? `${recipeSteps.length + 1} Steps` : ``}
+              {recipeSteps ? `${recipeSteps.length} Steps` : ``}
             </Text>
 
             <Directions>
@@ -147,40 +153,9 @@ const Directions = styled.View`
   margin-top: 16px;
 `;
 
-// 		return (
-// 			<SafeAreaView style={styles.container}>
-// 				<Image
-// 					source={{
-// 						width  : 350,
-// 						height : 200,
-// 						uri    : recipeImage
-// 					}}
-// 				/>
-// 				<Text style={styles.title}>{title}</Text>
-// 				<Text style={styles.textBlock}>{recipeSteps}</Text>
-// 			</SafeAreaView>
-// 		);
-// 	}
-// }
-
-// const styles = StyleSheet.create({
-// 	container : {
-// 		flex            : 1,
-// 		backgroundColor : '#87CEFA',
-// 		alignItems      : 'center',
-// 		justifyContent  : 'center'
-// 	},
-// 	textBlock : {
-// 		margin  : 12,
-// 		padding : 12
-// 		// borderWidth     : 1,
-// 		// borderColor     : '#ccc',
-// 		// backgroundColor : 'white'
-// 	},
-// 	title     : {
-// 		fontSize   : 24,
-// 		fontWeight : 'bold',
-// 		margin     : 12,
-// 		padding    : 12
-// 	}
-// });
+const Title = styled.Text`
+  text-shadow: 1px 1px 2px #000000;
+  font-weight: 600;
+  font-size: 25px;
+  color: #fff;
+`;

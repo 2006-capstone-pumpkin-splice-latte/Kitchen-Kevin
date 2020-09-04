@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Animated, TouchableWithoutFeedback } from 'reac
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 
-export default class FloatingButton extends React.Component {
+export default class MasterButton extends React.Component {
   constructor(props) {
     super(props)
   }
@@ -19,6 +19,7 @@ export default class FloatingButton extends React.Component {
     this.open = !this.open
   }
   render() {
+    const {speak, mute, interrupt, speakState, kevinSpeakState} = this.props
     const micStyle = {
       transform: [
         {
@@ -57,16 +58,43 @@ export default class FloatingButton extends React.Component {
     }
     return (
       <View style={[styles.container, this.props.style]}>
+        {!speakState && !kevinSpeakState?
+        <TouchableWithoutFeedback onPress={speak}>
+        <Animated.View style={[styles.button, styles.secondary, micStyle]}>
+          <FontAwesome5 name='microphone' size={24} color={'#000'}/>
+        </Animated.View>
+      </TouchableWithoutFeedback>
+
+        : <Text></Text>}
+        {!speakState && kevinSpeakState?
         <TouchableWithoutFeedback>
-          <Animated.View style={[styles.button, styles.secondary, micStyle]}>
-            <FontAwesome5 name='microphone-slash' size={24} color={'#F02A4B'}/>
-          </Animated.View>
-        </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback>
+        <Animated.View style={[styles.button, styles.secondary, micStyle, {opacity: 0.3}]}>
+          <FontAwesome5 name='microphone' size={24} color={'#000'}/>
+        </Animated.View>
+      </TouchableWithoutFeedback>
+
+        : <Text></Text>}
+
+        {speakState && !kevinSpeakState?
+        <TouchableWithoutFeedback onPress={mute}>
+        <Animated.View style={[styles.button, styles.secondary, micStyle]}>
+          <FontAwesome5 name='microphone-slash' size={24} color={'#F02A4B'}/>
+        </Animated.View>
+      </TouchableWithoutFeedback>
+        : <Text></Text>
+        }
+
+          {kevinSpeakState? <TouchableWithoutFeedback onPress={interrupt}>
           <Animated.View style={[styles.button, styles.secondary, silenceStyle]}>
             <FontAwesome5 name='comment-slash' size={24}/>
           </Animated.View>
-        </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>:
+        <TouchableWithoutFeedback>
+        <Animated.View style={[styles.button, styles.secondary, silenceStyle, {opacity: 0.3}]}>
+          <FontAwesome5 name='comment-slash' size={24}/>
+        </Animated.View>
+      </TouchableWithoutFeedback>}
+
         <TouchableWithoutFeedback onPress={this.toggleMenu}>
           <Animated.View style={[styles.button, styles.menu, rotation]}>
             <FontAwesome5 name='plus' size={24} color={"#FFF"}/>
@@ -90,7 +118,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     shadowRadius: 10,
-    shadowColor: "#F02A4B",
+    shadowColor: "#FFF",
     shadowOpacity: 0.3,
     shadowOffset: { height: 10 }
   },
@@ -102,9 +130,5 @@ const styles = StyleSheet.create({
     height:60,
     borderRadius: 60/2,
     backgroundColor: '#FFF',
-    shadowRadius: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.3,
-    shadowOffset: { height: 10 }
   }
 })

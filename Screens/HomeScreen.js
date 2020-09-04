@@ -27,6 +27,8 @@ export default class HomeScreen extends React.Component {
       dfConfig.project_id
     );
     this.state = {
+      speaking: false,
+      kevinSpeaking: false,
       transcript: [],
 			ingredientsArr: [],
 			allIngredientsAmounts: {},
@@ -45,14 +47,22 @@ export default class HomeScreen extends React.Component {
     Tts.addEventListener("tts-start", (event) => {
       console.log("TTS STARTED HAHAHAA");
       Voice.stop();
+      this.setState({
+        speaking: false,
+        kevinSpeaking: true
+      })
     });
     Tts.addEventListener("tts-finish", (event) => {
       console.log("TTS FINISHED HAHAHAA");
-      Voice.start();
+      Voice.start()
+      this.setState({
+        speaking:true,
+        kevinSpeaking: false
+      })
     });
   }
 
-  pullIngredients=(array)=> {
+  pullIngredients = (array) => {
 		let newObj = {
 			names: [],
 			amounts: {}
@@ -81,12 +91,36 @@ export default class HomeScreen extends React.Component {
 			}
 		}
 		return response
-	}
+  }
 
-  initiateConversation() {
+  mute = () => {
+    console.log('running mute')
+    this.setState({
+      speaking: false,
+    })
+    Dialogflow_V2.finishListening()
+  }
+
+  interrupt = () => {
+    console.log('running interrupt')
+    Tts.stop();
+    Voice.start();
+    this.setState({
+      kevinSpeaking: false,
+      speaking: true
+    })
+  }
+
+  initiateConversation = () => {
     console.log("running init conversation");
+    this.setState({
+      speaking:true
+    })
     Dialogflow_V2.startListening(
       async (result) => {
+        this.setState({
+          speaking: false
+        })
         let intent = result.queryResult.intent.displayName;
         let response = result.queryResult.fulfillmentText;
         this.setState({
@@ -252,7 +286,8 @@ export default class HomeScreen extends React.Component {
       <SafeAreaView style={styles.container}>
         <ScrollView
           ref={(ref) => (this.ScrollView = ref)}
-          // style={{ flex: 1 }}
+          style={{ flex: 1,
+          marginBottom: 120 }}
           // contentContainerStyle={{
           //   flexGrow: 1,
           // }}
@@ -276,31 +311,9 @@ export default class HomeScreen extends React.Component {
 
           ))}
         </ScrollView>
-            <MasterButton style={{ bottom: 100 }}/>
-        {/* <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            this.initiateConversation();
-          }}
-        >
-          <Image
-            source={require("../assets/kindpng_1602515.png")}
-            style={styles.mic}
-          />
-        </TouchableOpacity>
-        <Button
-          title="Stop Talking to Kevin"
-          onPress={() => {
-            Dialogflow_V2.finishListening();
-          }}
-        />
-        <Button
-          title="Interrupt Kevin"
-          onPress={() => {
-            Tts.stop();
-            Voice.start();
-          }}
-        /> */}
+        <View>
+        <MasterButton style={{ bottom: 70 }} speak={this.initiateConversation} mute={this.mute} interrupt={this.interrupt} speakState={this.state.speaking} kevinSpeakState={this.state.kevinSpeaking}/>
+        </View>
       </SafeAreaView>
       </Container>
     );

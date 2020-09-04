@@ -19,7 +19,7 @@ export default class RecipeScreen extends Component {
           <SafeAreaView>
             <MainRecipe>
               <Text>{title}</Text>
-              <Divider />
+              {recipeSteps ? <Divider/> : <Text></Text>}
             </MainRecipe>
           </SafeAreaView>
         </RecipeBackground>
@@ -71,7 +71,7 @@ export default class RecipeScreen extends Component {
 
 const Container = styled.View`
   flex: 1;
-  background-color: #fff;
+  background-color: #8D99AE;
 `;
 
 const Text = styled.Text`
@@ -113,7 +113,7 @@ const Divider = styled.View`
 const DirectionsContainer = styled.View`
   margin-top: -20px;
   padding: 32px;
-  background-color: #fff;
+  background-color: #8D99AE;
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
 `;

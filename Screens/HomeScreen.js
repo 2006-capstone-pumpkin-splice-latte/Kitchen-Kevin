@@ -3,9 +3,7 @@ import {
   StyleSheet,
   ScrollView,
   View,
-  Button,
   Image,
-  TouchableOpacity,
   SafeAreaView,
 } from "react-native";
 import Voice from "@react-native-community/voice";
@@ -14,7 +12,7 @@ import spoonacularAPI from "../apis/spoon";
 import { Dialogflow_V2 } from "react-native-dialogflow";
 import dfConfig from "../apis/config/dialogflowConfig";
 import styled from "styled-components";
-import MasterButton from '../MasterButton'
+import MasterButton from "../MasterButton";
 
 export default class HomeScreen extends React.Component {
   constructor(props) {
@@ -30,8 +28,8 @@ export default class HomeScreen extends React.Component {
       speaking: false,
       kevinSpeaking: false,
       transcript: [],
-			ingredientsArr: [],
-			allIngredientsAmounts: {},
+      ingredientsArr: [],
+      allIngredientsAmounts: {},
       allIngredientsNames: [],
       recipeImage: "",
       recipeSteps: [],
@@ -43,84 +41,83 @@ export default class HomeScreen extends React.Component {
         rate: 0.5,
       },
       screenHeight: 0,
-		};
+    };
     Tts.addEventListener("tts-start", (event) => {
       console.log("TTS STARTED HAHAHAA");
       Voice.stop();
       this.setState({
         speaking: false,
-        kevinSpeaking: true
-      })
+        kevinSpeaking: true,
+      });
     });
     Tts.addEventListener("tts-finish", (event) => {
       console.log("TTS FINISHED HAHAHAA");
-      Voice.start()
+      Voice.start();
       this.setState({
-        speaking:true,
-        kevinSpeaking: false
-      })
+        speaking: true,
+        kevinSpeaking: false,
+      });
     });
   }
 
   pullIngredients = (array) => {
-		let newObj = {
-			names: [],
-			amounts: {}
-		}
-		for (let i = 0; i < array.length; i++) {
-			let x = array[i];
-			newObj.names.push(x.name)
-			newObj.amounts[x.name] = x.originalString;
-		}
-		return newObj;
-	}
+    let newObj = {
+      names: [],
+      amounts: {},
+    };
+    for (let i = 0; i < array.length; i++) {
+      let x = array[i];
+      newObj.names.push(x.name);
+      newObj.amounts[x.name] = x.originalString;
+    }
+    return newObj;
+  };
 
-	pullAmountResponse = (ingrNames, ingrAmounts, userQuery) => {
-		let response = 'You will need '
-		for (let i=0; i<userQuery.length; i++) {
-			for (let j=0; j<ingrNames.length; j++) {
-				if(ingrNames[j].includes(userQuery[i])) {
-					let key = ingrNames[j]
-					if (i === userQuery.length - 1) {
-						response += `and ${ingrAmounts[key]}.`
-					}
-					else {
-						response += `${ingrAmounts[key]}, `
-					}
-				}
-			}
-		}
-		return response
-  }
+  pullAmountResponse = (ingrNames, ingrAmounts, userQuery) => {
+    let response = "You will need ";
+    for (let i = 0; i < userQuery.length; i++) {
+      for (let j = 0; j < ingrNames.length; j++) {
+        if (ingrNames[j].includes(userQuery[i])) {
+          let key = ingrNames[j];
+          if (i === userQuery.length - 1) {
+            response += `and ${ingrAmounts[key]}.`;
+          } else {
+            response += `${ingrAmounts[key]}, `;
+          }
+        }
+      }
+    }
+    return response;
+  };
 
   mute = () => {
-    console.log('running mute')
+    console.log("running mute");
     this.setState({
       speaking: false,
-    })
-    Dialogflow_V2.finishListening()
-  }
+    });
+    Dialogflow_V2.finishListening();
+  };
 
   interrupt = () => {
-    console.log('running interrupt')
+    console.log("running interrupt");
     Tts.stop();
     Voice.start();
     this.setState({
       kevinSpeaking: false,
-      speaking: true
-    })
-  }
+      speaking: true,
+    });
+  };
 
   initiateConversation = () => {
     console.log("running init conversation");
     this.setState({
-      speaking:true
-    })
+      speaking: true,
+    });
     Dialogflow_V2.startListening(
       async (result) => {
         this.setState({
-          speaking: false
-        })
+          speaking: false,
+        });
         let intent = result.queryResult.intent.displayName;
         let response = result.queryResult.fulfillmentText;
         this.setState({
@@ -130,7 +127,7 @@ export default class HomeScreen extends React.Component {
           ],
         });
         if (result.queryResult.parameters.foodIngredients) {
-					console.log(result.queryResult.parameters.foodIngredients)
+          console.log(result.queryResult.parameters.foodIngredients);
           this.setState({
             ingredientsArr: result.queryResult.parameters.foodIngredients,
             transcript: [...this.state.transcript, `Kevin: ${response}`],
@@ -149,24 +146,24 @@ export default class HomeScreen extends React.Component {
             this.setState({
               recipeSteps: [...this.state.recipeSteps, step.step],
             });
-					});
-					let sentence = `I got a recipe for ${
+          });
+          let sentence = `I got a recipe for ${
             data.title
           }. You will need ${ingredientsObj.names.join(
             ", "
           )}. Would you like to proceed with this recipe or should I find a new recipe?`;
           this.setState({
             transcript: [...this.state.transcript, "Kevin: " + sentence],
-						allIngredientsNames: ingredientsObj.names,
-						allIngredientsAmounts: ingredientsObj.amounts,
+            allIngredientsNames: ingredientsObj.names,
+            allIngredientsAmounts: ingredientsObj.amounts,
             recipeImage: data.image,
             recipeTitle: data.title,
           });
           Tts.speak(sentence, this.state.ttsConfig);
         } else if (intent === "recipeProceed") {
-					this.setState({
-						stepCount: 0,
-					})
+          this.setState({
+            stepCount: 0,
+          });
           if (this.state.stepCount === 0) {
             let instruction = this.state.recipeSteps[this.state.stepCount];
             Tts.speak(instruction, this.state.ttsConfig);
@@ -178,22 +175,24 @@ export default class HomeScreen extends React.Component {
               recipeSteps: [...this.state.recipeSteps],
               recipeImage: this.state.recipeImage,
               recipeTitle: this.state.recipeTitle,
+              allIngredientsAmounts: this.state.allIngredientsAmounts,
             });
           }
-				}
-				else if(intent === 'allIngredientsAmount') {
-					console.log('ALLAMOUNT INTENT')
-					console.log(result)
-				}
-				else if(intent === 'ingredientAmount') {
-					let query = result.queryResult.parameters['food-ingredients']
-					let amountResponse = this.pullAmountResponse(this.state.allIngredientsNames, this.state.allIngredientsAmounts, query)
-					Tts.speak(amountResponse, this.state.ttsConfig)
-					this.setState({
-						transcript: [...this.state.transcript, `Kevin: ${amountResponse}`]
-					})
-				}
-				else if (intent === "newRecipe") {
+        } else if (intent === "allIngredientsAmount") {
+          console.log("ALLAMOUNT INTENT");
+          console.log(result);
+        } else if (intent === "ingredientAmount") {
+          let query = result.queryResult.parameters["food-ingredients"];
+          let amountResponse = this.pullAmountResponse(
+            this.state.allIngredientsNames,
+            this.state.allIngredientsAmounts,
+            query
+          );
+          Tts.speak(amountResponse, this.state.ttsConfig);
+          this.setState({
+            transcript: [...this.state.transcript, `Kevin: ${amountResponse}`],
+          });
+        } else if (intent === "newRecipe") {
           //replace old recipe with new recipe
           if (this.state.recipeCounter === 4) {
             let lastRecipeMessage = "Sorry, homie, there are no more recipes.";
@@ -204,15 +203,14 @@ export default class HomeScreen extends React.Component {
                 `Kevin: ${lastRecipeMessage}`,
               ],
             });
-					}
-					else {
+          } else {
             this.setState({
               recipeCounter: this.state.recipeCounter + 1,
               recipeSteps: [],
               recipeImage: "",
-							recipeTitle: "",
-							allIngredientsNames: [],
-							allIngredientsAmounts: {}
+              recipeTitle: "",
+              allIngredientsNames: [],
+              allIngredientsAmounts: {},
             });
             const { data } = await spoonacularAPI(
               this.state.ingredientsArr,
@@ -234,8 +232,8 @@ export default class HomeScreen extends React.Component {
             });
             this.setState({
               transcript: [...this.state.transcript, "Kevin: " + sentence],
-							allIngredientsArr: ingredientsObj.names,
-							allIngredientsAmounts: ingredientsObj.amounts,
+              allIngredientsArr: ingredientsObj.names,
+              allIngredientsAmounts: ingredientsObj.amounts,
               recipeImage: data.image,
               recipeTitle: data.title,
             });
@@ -259,15 +257,13 @@ export default class HomeScreen extends React.Component {
               stepCount: this.state.stepCount + 1,
             });
           }
-				}
-				else if(intent==='rapGod'){
-					this.setState({
+        } else if (intent === "rapGod") {
+          this.setState({
             transcript: [...this.state.transcript, "Kevin: " + response],
-					});
+          });
 
-					Tts.speak(response, {...this.state.ttsConfig, rate: 0.58});
-
-				} else {
+          Tts.speak(response, { ...this.state.ttsConfig, rate: 0.58 });
+        } else {
           this.setState({
             transcript: [...this.state.transcript, "Kevin: " + response],
           });
@@ -278,43 +274,57 @@ export default class HomeScreen extends React.Component {
         console.log(error);
       }
     );
-  }
+  };
 
   render() {
     return (
       <Container>
-      <SafeAreaView style={styles.container}>
-        <ScrollView
-          ref={(ref) => (this.ScrollView = ref)}
-          style={{ flex: 1,
-          marginBottom: 120 }}
-          // contentContainerStyle={{
-          //   flexGrow: 1,
-          // }}
-          onContentSizeChange={() =>
-            this.ScrollView.scrollToEnd({ animated: true })
-          }
-        >
-          {this.state.transcript.map((result, idx) => (
-            result.slice(0,3)==='You'?
-            <TextContainer user key={idx}>
-              <Text small dark>
-              {result}
-            </Text>
-            </TextContainer>
-            :
-            <TextContainer kevin key={idx}>
-              <Text black small>
-              {result}
-            </Text>
-            </TextContainer>
-
-          ))}
-        </ScrollView>
-        <View>
-        <MasterButton style={{ bottom: 70 }} speak={this.initiateConversation} mute={this.mute} interrupt={this.interrupt} speakState={this.state.speaking} kevinSpeakState={this.state.kevinSpeaking}/>
-        </View>
-      </SafeAreaView>
+        <SafeAreaView style={styles.container}>
+          <Image
+            style={styles.image}
+            source={require("../assets/Kitchen_Kevin_HomeScreen_Logo.png")}
+          />
+          <ScrollView
+            ref={(ref) => (this.ScrollView = ref)}
+            style={{
+              flex: 1,
+              marginBottom: 120,
+              marginTop: 80,
+            }}
+            // contentContainerStyle={{
+            //   flexGrow: 1,
+            // }}
+            onContentSizeChange={() =>
+              this.ScrollView.scrollToEnd({ animated: true })
+            }
+          >
+            {this.state.transcript.map((result, idx) =>
+              result.slice(0, 3) === "You" ? (
+                <TextContainer user key={idx}>
+                  <Text small dark>
+                    {result.slice(5)}
+                  </Text>
+                </TextContainer>
+              ) : (
+                <TextContainer kevin key={idx}>
+                  <Text black small>
+                    {result.slice(7)}
+                  </Text>
+                </TextContainer>
+              )
+            )}
+          </ScrollView>
+          <View>
+            <MasterButton
+              style={{ bottom: 70 }}
+              speak={this.initiateConversation}
+              mute={this.mute}
+              interrupt={this.interrupt}
+              speakState={this.state.speaking}
+              kevinSpeakState={this.state.kevinSpeaking}
+            />
+          </View>
+        </SafeAreaView>
       </Container>
     );
   }
@@ -328,7 +338,6 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: 20,
-
   },
   kevin: {
     height: 100,
@@ -343,24 +352,34 @@ const styles = StyleSheet.create({
     height: 100,
     width: 70,
   },
+  image: {
+    resizeMode: "contain",
+    maxWidth: 300,
+    maxHeight: 100,
+    position: "absolute",
+    bottom: 684.5,
+    borderColor: "white",
+    borderRadius: 10,
+    borderBottomWidth: 10,
+  },
 });
 
 const Container = styled.View`
   flex: 1;
-  background-color: #8D99AE;
+  background-color: #fec89a;
 `;
 
 const TextContainer = styled.View`
   flex:1;
-  align-items: flex-end;
+  align-items: ${(props) => (props.user ? "flex-end" : "flex-start")}
   margin:8px;
-  margin-left:${(props) => (props.user ? '140px': '10px')}
-  margin-right:${(props) => (props.kevin ? '140px': '10px')}
+  margin-left:${(props) => (props.user ? "140px" : "10px")}
+  margin-right:${(props) => (props.kevin ? "140px" : "10px")}
 
-`
+`;
 const Text = styled.Text`
-  background-color: ${(props) => (props.black?'#22223B':'#FEEAFA')};
-  padding:10px;
+  background-color: ${(props) => (props.black ? "#22223B" : "#FEEAFA")};
+  padding: 10px;
   color: ${(props) => (props.dark ? "#000" : "#FFF")};
   font-family: "AvenirNext-Regular";
   font-size: ${(props) => (props.small ? "15px" : "25px")};

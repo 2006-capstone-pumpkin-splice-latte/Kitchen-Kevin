@@ -6,23 +6,46 @@ export default class RecipeScreen extends Component {
   constructor(props) {
     super(props);
   }
-
+  createIngredientsList = (obj) => {
+    let ingredientsArray = [];
+    for (let key in obj) {
+      ingredientsArray.push(obj[key]);
+    }
+    return ingredientsArray;
+  };
   render() {
     const recipeSteps = this.props.navigation.getParam("recipeSteps");
     const recipeImage = this.props.navigation.getParam("recipeImage");
     const title = this.props.navigation.getParam("recipeTitle");
 
+    const allIngredientsList = this.createIngredientsList(
+      this.props.navigation.getParam("allIngredientsAmounts")
+    );
+    console.log("hello", recipeImage);
+
     return (
       <Container>
         <StatusBar barStyle="light-content" />
-        <RecipeBackground source={{ uri: recipeImage }}>
-          <SafeAreaView>
-            <MainRecipe>
-              <Text>{title}</Text>
-              {recipeSteps ? <Divider/> : <Text></Text>}
-            </MainRecipe>
-          </SafeAreaView>
-        </RecipeBackground>
+        {recipeImage && recipeImage.length > 0 ? (
+          <RecipeBackground source={{ uri: recipeImage }}>
+            <SafeAreaView>
+              <MainRecipe>
+                <Title>{title}</Title>
+                {recipeSteps ? <Divider /> : <Text></Text>}
+              </MainRecipe>
+            </SafeAreaView>
+          </RecipeBackground>
+        ) : (
+          <RecipeBackground hidden source={{ uri: recipeImage }}>
+            <SafeAreaView>
+              <MainRecipe>
+                <Title>{title}</Title>
+                {recipeSteps ? <Divider /> : <Text></Text>}
+              </MainRecipe>
+            </SafeAreaView>
+          </RecipeBackground>
+        )}
+
         <ScrollView
           ref={(ref) => (this.ScrollView = ref)}
           style={{ flex: 1 }}
@@ -31,19 +54,42 @@ export default class RecipeScreen extends Component {
           }}
         >
           <DirectionsContainer>
-            {/* <Text dark heavy large> */}
+            {allIngredientsList.length > 0 ? (
+              <Text dark large style={{ fontSize: 20 }}>
+                Ingredients
+              </Text>
+            ) : (
+              <Text></Text>
+            )}
+            {allIngredientsList && allIngredientsList.length ? (
+              <Divider dark />
+            ) : (
+              <Text></Text>
+            )}
+            {allIngredientsList && allIngredientsList.length > 0 ? (
+              allIngredientsList.map((ingredient, index) => {
+                return (
+                  <Text small dark key={index}>
+                    {ingredient}
+                  </Text>
+                );
+              })
+            ) : (
+              <Text></Text>
+            )}
             {!recipeSteps ? (
               <Text dark heavy large>
                 No recipe
               </Text>
             ) : (
               <Text dark large style={{ fontSize: 20 }}>
+                {"\n"}
                 Directions
               </Text>
             )}
             <Divider dark />
             <Text dark small italic>
-              {recipeSteps ? `${recipeSteps.length + 1} Steps` : ``}
+              {recipeSteps ? `${recipeSteps.length} Steps` : ``}
             </Text>
 
             <Directions>
@@ -71,7 +117,7 @@ export default class RecipeScreen extends Component {
 
 const Container = styled.View`
   flex: 1;
-  background-color: #8D99AE;
+  background-color: #fec89a;
 `;
 
 const Text = styled.Text`
@@ -82,20 +128,18 @@ const Text = styled.Text`
   font-style: ${(props) => (props.italic ? "italic" : "normal")};
 `;
 
+const Title = styled.Text`
+  text-shadow: 1px 1px 2px #000000;
+  font-weight: 600;
+  font-size: 25px;
+  color: #fff;
+`;
+
 const RecipeBackground = styled.ImageBackground`
   width: 100%;
   height: 50%;
-`;
-
-const MenuBar = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 16px;
-`;
-
-const Back = styled.View`
-  flex-direction: row;
-  align-items: center;
+  border-color: #E5E5E5
+  border-bottom-width: ${(props) => (props.hidden ? "0px" : "10px")}
 `;
 
 const MainRecipe = styled.View`
@@ -113,7 +157,7 @@ const Divider = styled.View`
 const DirectionsContainer = styled.View`
   margin-top: -20px;
   padding: 32px;
-  background-color: #8D99AE;
+  background-color: #fec89a;
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
 `;
@@ -121,4 +165,3 @@ const DirectionsContainer = styled.View`
 const Directions = styled.View`
   margin-top: 16px;
 `;
-

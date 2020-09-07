@@ -1,6 +1,6 @@
 # Kitchen Kevin (Mobile App)
 
-Hello dudes, it's Kevin. I'm gonna help you cook the dankest food.
+Hello, my name isKevin. I'm gonna help you cook the dankest food.
 
 Kitchen Kevin (Mobile App) helps you find recipe based on what ingredients you have.
 
@@ -8,8 +8,7 @@ Kitchen Kevin (Mobile App) helps you find recipe based on what ingredients you h
 ## What to Install
 
 #### XCode
-Although this app uses React-Native, it does not use Expo to compile the code due to Expo not able to access the IOS folder that was required to run Google DialogFlow.
-One must have XCode to compile this project on their local machine.
+Using React-Native, this application was developed specifically for the IOS. Make sure to have XCode, an IOS simulator, installed!
 
 
 In order to run Kitchen Kevin after cloning:
@@ -38,4 +37,4 @@ npm run ios
 
 4. To go to the next step of the recipe, the user should say "next step".
 
-5. Happy Cooking
+5. Happy Cooking!

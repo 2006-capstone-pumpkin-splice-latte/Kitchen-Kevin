@@ -72,6 +72,7 @@ const ContentText = styled.Text`
   color: ${(props) => (props.white ? "white" : "black")};
   margin: 16px;
 `;
+
 const RecipeBackground = styled.ImageBackground`
   width: 100%;
   height: 100%;

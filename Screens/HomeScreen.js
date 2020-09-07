@@ -5,6 +5,7 @@ import {
   View,
   Image,
   SafeAreaView,
+  ImageBackground,
 } from "react-native";
 import Voice from "@react-native-community/voice";
 import Tts from "react-native-tts";
@@ -278,6 +279,7 @@ export default class HomeScreen extends React.Component {
 
   render() {
     return (
+      <ImageBackground source={require('../assets/HomeScreen_Background.jpg')} style={styles.backgroundImage}>
       <Container>
         <SafeAreaView style={styles.container}>
           <Image
@@ -326,6 +328,7 @@ export default class HomeScreen extends React.Component {
           </View>
         </SafeAreaView>
       </Container>
+      </ImageBackground>
     );
   }
 }
@@ -355,18 +358,21 @@ const styles = StyleSheet.create({
   image: {
     resizeMode: "contain",
     maxWidth: 300,
-    maxHeight: 100,
+    maxHeight: 90,
     position: "absolute",
     bottom: 684.5,
     borderColor: "white",
     borderRadius: 10,
     borderBottomWidth: 10,
   },
+  backgroundImage: {
+    width: '100%',
+    height: '100%'
+  }
 });
 
 const Container = styled.View`
   flex: 1;
-  background-color: #fec89a;
 `;
 
 const TextContainer = styled.View`

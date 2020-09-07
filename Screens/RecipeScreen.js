@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StatusBar, SafeAreaView, ScrollView } from "react-native";
+import { StatusBar, SafeAreaView, ScrollView, ImageBackground, StyleSheet } from "react-native";
 import styled from "styled-components";
 
 export default class RecipeScreen extends Component {
@@ -21,7 +21,6 @@ export default class RecipeScreen extends Component {
     const allIngredientsList = this.createIngredientsList(
       this.props.navigation.getParam("allIngredientsAmounts")
     );
-    console.log("hello", recipeImage);
 
     return (
       <Container>

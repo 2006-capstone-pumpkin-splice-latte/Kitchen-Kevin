@@ -44,7 +44,6 @@ export default class HomeScreen extends React.Component {
       screenHeight: 0,
     };
     Tts.addEventListener("tts-start", (event) => {
-      console.log("TTS STARTED HAHAHAA");
       Voice.stop();
       this.setState({
         speaking: false,
@@ -52,7 +51,6 @@ export default class HomeScreen extends React.Component {
       });
     });
     Tts.addEventListener("tts-finish", (event) => {
-      console.log("TTS FINISHED HAHAHAA");
       Voice.start();
       this.setState({
         speaking: true,
@@ -92,7 +90,6 @@ export default class HomeScreen extends React.Component {
   };
 
   mute = () => {
-    console.log("running mute");
     this.setState({
       speaking: false,
     });
@@ -100,7 +97,6 @@ export default class HomeScreen extends React.Component {
   };
 
   interrupt = () => {
-    console.log("running interrupt");
     Tts.stop();
     Voice.start();
     this.setState({
@@ -110,7 +106,6 @@ export default class HomeScreen extends React.Component {
   };
 
   initiateConversation = () => {
-    console.log("running init conversation");
     this.setState({
       speaking: true,
     });
@@ -171,26 +166,6 @@ export default class HomeScreen extends React.Component {
               ],
             });
           }
-          // let ingredientsObj = this.pullIngredients(data.extendedIngredients);
-
-          // data.analyzedInstructions[0].steps.map((step) => {
-          //   this.setState({
-          //     recipeSteps: [...this.state.recipeSteps, step.step],
-          //   });
-          // });
-          // let sentence = `I got a recipe for ${
-          //   data.title
-          // }. You will need ${ingredientsObj.names.join(
-          //   ", "
-          // )}. Would you like to proceed with this recipe or should I find a new recipe?`;
-          // this.setState({
-          //   transcript: [...this.state.transcript, "Kevin: " + sentence],
-          //   allIngredientsNames: ingredientsObj.names,
-          //   allIngredientsAmounts: ingredientsObj.amounts,
-          //   recipeImage: data.image,
-          //   recipeTitle: data.title,
-          // });
-          // Tts.speak(sentence, this.state.ttsConfig);
         } else if (intent === "recipeProceed") {
           this.setState({
             stepCount: 0,
@@ -209,9 +184,6 @@ export default class HomeScreen extends React.Component {
               allIngredientsAmounts: this.state.allIngredientsAmounts,
             });
           }
-        } else if (intent === "allIngredientsAmount") {
-          console.log("ALLAMOUNT INTENT");
-          console.log(result);
         } else if (intent === "ingredientAmount") {
           let query = result.queryResult.parameters["food-ingredients"];
           let amountResponse = this.pullAmountResponse(
@@ -224,7 +196,6 @@ export default class HomeScreen extends React.Component {
             transcript: [...this.state.transcript, `Kevin: ${amountResponse}`],
           });
         } else if (intent === "newRecipe") {
-          //replace old recipe with new recipe
           if (this.state.recipeCounter === 4) {
             let lastRecipeMessage = "Sorry, homie, there are no more recipes.";
             Tts.speak(lastRecipeMessage, this.state.ttsConfig);

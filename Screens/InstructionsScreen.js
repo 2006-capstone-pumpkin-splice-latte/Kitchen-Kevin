@@ -18,11 +18,13 @@ export default class InstructionsScreen extends Component {
     return (
       <RecipeBackground source={require("../assets/HowTo_Background.jpg")}>
         <Container>
-          <CustomImage source={require("../assets/Kitchen_Kevin_Logo.png")} />
-          <Credits top style={{ top: 290 }}>
+          <CustomImage
+            source={require("../assets/Kitchen_Kevin_HomeScreen_Logo.png")}
+          />
+          <Credits top style={{ top: 112 }}>
             created by
           </Credits>
-          <Credits top style={{ top: 305 }}>
+          <Credits top style={{ top: 128 }}>
             Anderson Yoon, Adam Sue, Clark Chen, Simon Zeng
           </Credits>
           <RoundedTouchableOpacity>
@@ -31,12 +33,16 @@ export default class InstructionsScreen extends Component {
               1. To start, press microphone on the home screen to tell Kevin
               what ingredients you have.
               {"\n"}
+              {"\n"}
               2. To choose a recipe, say "Proceed" to begin cooking.
+              {"\n"}
               {"\n"}
               3. If you're curious how much of an ingredient you need, ask
               Kevin.
               {"\n"}
+              {"\n"}
               4. To tell Kevin to go to the next step, say "next step."
+              {"\n"}
               {"\n"}
               5. Enjoy your cooking experience!
             </ContentText>
@@ -55,8 +61,15 @@ const Container = styled.View`
 `;
 
 const CustomImage = styled.Image`
-  width: 200px;
-  height: 200px;
+  resize-mode: contain;
+  max-width: 300px;
+  max-height: 90px;
+  position: absolute;
+  bottom: 668.5px;
+  border-color: white;
+  border-radius: 10px;
+  border-bottom-width: 10px;
+  opacity: 0.9;
 `;
 const Title = styled.Text`
   font-family: "AvenirNext-Regular";
@@ -68,7 +81,7 @@ const Title = styled.Text`
 const ContentText = styled.Text`
   font-family: "AvenirNext-Regular";
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
   color: ${(props) => (props.white ? "white" : "black")};
   margin: 16px;
 `;
@@ -79,7 +92,7 @@ const RecipeBackground = styled.ImageBackground`
 `;
 
 const RoundedTouchableOpacity = styled.TouchableOpacity`
-  height: 300px;
+  height: 450px;
   border-bottom-left-radius: 50px;
   border-top-right-radius: 50px;
   border-bottom-right-radius: 50px;

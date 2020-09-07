@@ -139,28 +139,58 @@ export default class HomeScreen extends React.Component {
             transcript: [...this.state.transcript, `Kevin: ${response}`],
           });
           Tts.speak(response, this.state.ttsConfig);
+          try {
+            const { data } = await spoonacularAPI(this.state.ingredientsArr);
+            let ingredientsObj = this.pullIngredients(data.extendedIngredients);
 
-          const { data } = await spoonacularAPI(this.state.ingredientsArr);
-          let ingredientsObj = this.pullIngredients(data.extendedIngredients);
-
-          data.analyzedInstructions[0].steps.map((step) => {
-            this.setState({
-              recipeSteps: [...this.state.recipeSteps, step.step],
+            data.analyzedInstructions[0].steps.map((step) => {
+              this.setState({
+                recipeSteps: [...this.state.recipeSteps, step.step],
+              });
             });
-          });
-          let sentence = `I got a recipe for ${
-            data.title
-          }. You will need ${ingredientsObj.names.join(
-            ", "
-          )}. Would you like to proceed with this recipe or should I find a new recipe?`;
-          this.setState({
-            transcript: [...this.state.transcript, "Kevin: " + sentence],
-            allIngredientsNames: ingredientsObj.names,
-            allIngredientsAmounts: ingredientsObj.amounts,
-            recipeImage: data.image,
-            recipeTitle: data.title,
-          });
-          Tts.speak(sentence, this.state.ttsConfig);
+            let sentence = `I got a recipe for ${
+              data.title
+            }. You will need ${ingredientsObj.names.join(
+              ", "
+            )}. Would you like to proceed with this recipe or should I find a new recipe?`;
+            this.setState({
+              transcript: [...this.state.transcript, "Kevin: " + sentence],
+              allIngredientsNames: ingredientsObj.names,
+              allIngredientsAmounts: ingredientsObj.amounts,
+              recipeImage: data.image,
+              recipeTitle: data.title,
+            });
+            Tts.speak(sentence, this.state.ttsConfig);
+          } catch (error) {
+            const noRecipeSentence = `Sorry, I couldn't find a recipe with those ingredients. Please try again.`;
+            Tts.speak(noRecipeSentence, this.state.ttsConfig);
+            this.setState({
+              transcript: [
+                ...this.state.transcript,
+                "Kevin: " + noRecipeSentence,
+              ],
+            });
+          }
+          // let ingredientsObj = this.pullIngredients(data.extendedIngredients);
+
+          // data.analyzedInstructions[0].steps.map((step) => {
+          //   this.setState({
+          //     recipeSteps: [...this.state.recipeSteps, step.step],
+          //   });
+          // });
+          // let sentence = `I got a recipe for ${
+          //   data.title
+          // }. You will need ${ingredientsObj.names.join(
+          //   ", "
+          // )}. Would you like to proceed with this recipe or should I find a new recipe?`;
+          // this.setState({
+          //   transcript: [...this.state.transcript, "Kevin: " + sentence],
+          //   allIngredientsNames: ingredientsObj.names,
+          //   allIngredientsAmounts: ingredientsObj.amounts,
+          //   recipeImage: data.image,
+          //   recipeTitle: data.title,
+          // });
+          // Tts.speak(sentence, this.state.ttsConfig);
         } else if (intent === "recipeProceed") {
           this.setState({
             stepCount: 0,
@@ -279,55 +309,58 @@ export default class HomeScreen extends React.Component {
 
   render() {
     return (
-      <ImageBackground source={require('../assets/HomeScreen_Background.jpg')} style={styles.backgroundImage}>
-      <Container>
-        <SafeAreaView style={styles.container}>
-          <Image
-            style={styles.image}
-            source={require("../assets/Kitchen_Kevin_HomeScreen_Logo.png")}
-          />
-          <ScrollView
-            ref={(ref) => (this.ScrollView = ref)}
-            style={{
-              flex: 1,
-              marginBottom: 120,
-              marginTop: 80,
-            }}
-            // contentContainerStyle={{
-            //   flexGrow: 1,
-            // }}
-            onContentSizeChange={() =>
-              this.ScrollView.scrollToEnd({ animated: true })
-            }
-          >
-            {this.state.transcript.map((result, idx) =>
-              result.slice(0, 3) === "You" ? (
-                <TextContainer user key={idx}>
-                  <Text small dark>
-                    {result.slice(5)}
-                  </Text>
-                </TextContainer>
-              ) : (
-                <TextContainer kevin key={idx}>
-                  <Text black small>
-                    {result.slice(7)}
-                  </Text>
-                </TextContainer>
-              )
-            )}
-          </ScrollView>
-          <View>
-            <MasterButton
-              style={{ bottom: 70 }}
-              speak={this.initiateConversation}
-              mute={this.mute}
-              interrupt={this.interrupt}
-              speakState={this.state.speaking}
-              kevinSpeakState={this.state.kevinSpeaking}
+      <ImageBackground
+        source={require("../assets/HomeScreen_Background.jpg")}
+        style={styles.backgroundImage}
+      >
+        <Container>
+          <SafeAreaView style={styles.container}>
+            <Image
+              style={styles.image}
+              source={require("../assets/Kitchen_Kevin_HomeScreen_Logo.png")}
             />
-          </View>
-        </SafeAreaView>
-      </Container>
+            <ScrollView
+              ref={(ref) => (this.ScrollView = ref)}
+              style={{
+                flex: 1,
+                marginBottom: 120,
+                marginTop: 80,
+              }}
+              // contentContainerStyle={{
+              //   flexGrow: 1,
+              // }}
+              onContentSizeChange={() =>
+                this.ScrollView.scrollToEnd({ animated: true })
+              }
+            >
+              {this.state.transcript.map((result, idx) =>
+                result.slice(0, 3) === "You" ? (
+                  <TextContainer user key={idx}>
+                    <Text small dark>
+                      {result.slice(5)}
+                    </Text>
+                  </TextContainer>
+                ) : (
+                  <TextContainer kevin key={idx}>
+                    <Text black small>
+                      {result.slice(7)}
+                    </Text>
+                  </TextContainer>
+                )
+              )}
+            </ScrollView>
+            <View>
+              <MasterButton
+                style={{ bottom: 70 }}
+                speak={this.initiateConversation}
+                mute={this.mute}
+                interrupt={this.interrupt}
+                speakState={this.state.speaking}
+                kevinSpeakState={this.state.kevinSpeaking}
+              />
+            </View>
+          </SafeAreaView>
+        </Container>
       </ImageBackground>
     );
   }
@@ -364,11 +397,12 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderRadius: 10,
     borderBottomWidth: 10,
+    opacity: 0.9,
   },
   backgroundImage: {
-    width: '100%',
-    height: '100%'
-  }
+    width: "100%",
+    height: "100%",
+  },
 });
 
 const Container = styled.View`
@@ -384,9 +418,10 @@ const TextContainer = styled.View`
 
 `;
 const Text = styled.Text`
-  background-color: ${(props) => (props.black ? "#22223B" : "#FEEAFA")};
+  background-color: ${(props) => (props.black ? "#adb5bd" : "#FFF")};
   padding: 10px;
-  color: ${(props) => (props.dark ? "#000" : "#FFF")};
+  opacity: .9
+  color: black
   font-family: "AvenirNext-Regular";
   font-size: ${(props) => (props.small ? "15px" : "25px")};
   font-weight: 600;

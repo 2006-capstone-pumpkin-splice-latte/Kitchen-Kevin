@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StatusBar, SafeAreaView, ScrollView, ImageBackground, StyleSheet } from "react-native";
+import { StatusBar, SafeAreaView, ScrollView } from "react-native";
 import styled from "styled-components";
 
 export default class RecipeScreen extends Component {
@@ -23,100 +23,104 @@ export default class RecipeScreen extends Component {
     );
 
     return (
-      <Container>
-        <StatusBar barStyle="light-content" />
-        {recipeImage && recipeImage.length > 0 ? (
-          <RecipeBackground source={{ uri: recipeImage }}>
-            <SafeAreaView>
-              <MainRecipe>
-                <Title>{title}</Title>
-                {recipeSteps ? <Divider /> : <Text></Text>}
-              </MainRecipe>
-            </SafeAreaView>
-          </RecipeBackground>
-        ) : (
-          <RecipeBackground hidden source={{ uri: recipeImage }}>
-            <SafeAreaView>
-              <MainRecipe>
-                <Title>{title}</Title>
-                {recipeSteps ? <Divider /> : <Text></Text>}
-              </MainRecipe>
-            </SafeAreaView>
-          </RecipeBackground>
-        )}
+      <ScreenBackground
+        source={require("../assets/Recipe_Image_Background-1.png")}
+        // style={styles.backgroundImage}
+      >
+        <Container>
+          <StatusBar barStyle="light-content" />
+          {recipeImage && recipeImage.length > 0 ? (
+            <RecipeBackground source={{ uri: recipeImage }}>
+              <SafeAreaView>
+                <MainRecipe>
+                  <Title>{title}</Title>
+                  {recipeSteps ? <Divider /> : <Text></Text>}
+                </MainRecipe>
+              </SafeAreaView>
+            </RecipeBackground>
+          ) : (
+            <RecipeBackground hidden source={{ uri: recipeImage }}>
+              <SafeAreaView>
+                <MainRecipe>
+                  <Title>{title}</Title>
+                  {recipeSteps ? <Divider /> : <Text></Text>}
+                </MainRecipe>
+              </SafeAreaView>
+            </RecipeBackground>
+          )}
 
-        <ScrollView
-          ref={(ref) => (this.ScrollView = ref)}
-          style={{ flex: 1 }}
-          contentContainerStyle={{
-            flexGrow: 1,
-          }}
-        >
-          <DirectionsContainer>
-            {allIngredientsList.length > 0 ? (
-              <Text dark large style={{ fontSize: 20 }}>
-                Ingredients
-              </Text>
-            ) : (
-              <Text></Text>
-            )}
-            {allIngredientsList && allIngredientsList.length ? (
-              <Divider dark />
-            ) : (
-              <Text></Text>
-            )}
-            {allIngredientsList && allIngredientsList.length > 0 ? (
-              allIngredientsList.map((ingredient, index) => {
-                return (
-                  <Text small dark key={index}>
-                    {ingredient}
-                  </Text>
-                );
-              })
-            ) : (
-              <Text></Text>
-            )}
-            {!recipeSteps ? (
-              <Text dark heavy large>
-                No recipe
-              </Text>
-            ) : (
-              <Text dark large style={{ fontSize: 20 }}>
-                {"\n"}
-                Directions
-              </Text>
-            )}
-            <Divider dark />
-            <Text dark small italic>
-              {recipeSteps ? `${recipeSteps.length} Steps` : ``}
-            </Text>
-
-            <Directions>
-              {recipeSteps ? (
-                recipeSteps.map((step, index) => {
+          <ScrollView
+            ref={(ref) => (this.ScrollView = ref)}
+            style={{ flex: 1 }}
+            contentContainerStyle={{
+              flexGrow: 1,
+            }}
+          >
+            <DirectionsContainer>
+              {allIngredientsList.length > 0 ? (
+                <Text dark large style={{ fontSize: 20 }}>
+                  Ingredients
+                </Text>
+              ) : (
+                <Text></Text>
+              )}
+              {allIngredientsList && allIngredientsList.length ? (
+                <Divider dark />
+              ) : (
+                <Text></Text>
+              )}
+              {allIngredientsList && allIngredientsList.length > 0 ? (
+                allIngredientsList.map((ingredient, index) => {
                   return (
-                    <Text dark small key={index}>
-                      {index + 1}. {step}
-                      {"\n"}
+                    <Text small dark key={index}>
+                      {ingredient}
                     </Text>
                   );
                 })
               ) : (
-                <Text dark small>
-                  Ask Kevin to help you with a recipe!
+                <Text></Text>
+              )}
+              {!recipeSteps ? (
+                <Text dark heavy large>
+                  No recipe
+                </Text>
+              ) : (
+                <Text dark large style={{ fontSize: 20 }}>
+                  {"\n"}
+                  Directions
                 </Text>
               )}
-            </Directions>
-          </DirectionsContainer>
-        </ScrollView>
-      </Container>
+              <Divider dark />
+              <Text dark small italic>
+                {recipeSteps ? `${recipeSteps.length} Steps` : ``}
+              </Text>
+
+              <Directions>
+                {recipeSteps ? (
+                  recipeSteps.map((step, index) => {
+                    return (
+                      <Text dark small key={index}>
+                        {index + 1}. {step}
+                        {"\n"}
+                      </Text>
+                    );
+                  })
+                ) : (
+                  <Text dark small>
+                    Ask Kevin to help you with a recipe!
+                  </Text>
+                )}
+              </Directions>
+            </DirectionsContainer>
+          </ScrollView>
+        </Container>
+      </ScreenBackground>
     );
   }
 }
 
 const Container = styled.View`
   flex: 1;
-  background-color: #fec89a;
 `;
 
 const Text = styled.Text`
@@ -132,6 +136,12 @@ const Title = styled.Text`
   font-weight: 600;
   font-size: 25px;
   color: #fff;
+`;
+
+const ScreenBackground = styled.ImageBackground`
+  resize-mode: center;
+  width: 100%
+  height: 100%
 `;
 
 const RecipeBackground = styled.ImageBackground`
@@ -156,7 +166,8 @@ const Divider = styled.View`
 const DirectionsContainer = styled.View`
   margin-top: -20px;
   padding: 32px;
-  background-color: #fec89a;
+  background-color: #e5e5e5;
+  opacity: .8
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
 `;

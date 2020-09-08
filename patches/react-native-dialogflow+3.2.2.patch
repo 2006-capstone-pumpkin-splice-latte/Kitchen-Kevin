@@ -1,22 +1,19 @@
 diff --git a/node_modules/react-native-dialogflow/index.js b/node_modules/react-native-dialogflow/index.js
-index 8b9e018..f6e7c0f 100644
+index 8b9e018..4e724ce 100644
 --- a/node_modules/react-native-dialogflow/index.js
 +++ b/node_modules/react-native-dialogflow/index.js
-@@ -53,7 +53,9 @@ dialogflow2.setConfiguration = async function (clientEmail, privateKey, language
+@@ -53,6 +53,7 @@ dialogflow2.setConfiguration = async function (clientEmail, privateKey, language
      dialogflow2.sessionId = dialogflow2.sessionId ? dialogflow2.sessionId : dialogflow2.guid();
  
      // set listeners
 +
      Voice.onSpeechStart = (c) => {
-+        console.log('speech started')
          dialogflow2.speechResult = null;
          if (dialogflow2.onListeningStarted) {
-             dialogflow2.onListeningStarted(c);
-@@ -78,16 +80,21 @@ dialogflow2.setConfiguration = async function (clientEmail, privateKey, language
+@@ -78,16 +79,20 @@ dialogflow2.setConfiguration = async function (clientEmail, privateKey, language
      }
  
      Voice.onSpeechResults = (result) => {
-+        console.log('CURRENTLY PICKING UP VOICE')
 +        clearTimeout(dialogflow2.silenceTimer)
          if (result.value) {
              dialogflow2.speechResult = result.value;
@@ -35,8 +32,8 @@ index 8b9e018..f6e7c0f 100644
      Voice.start(dialogflow2.languageTag);
  }
  
-@@ -97,3 +104,4 @@ dialogflow2.finishListening = function () {
+@@ -96,4 +101,3 @@ dialogflow2.finishListening = function () {
+ }
  
  export { dialogflow2 as Dialogflow_V2 };
- 
-+//TESTING PATCH PACKAGE WORKS WITH THIS COMMENT
+-

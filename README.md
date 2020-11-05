@@ -1,6 +1,6 @@
 # Kitchen Kevin (Mobile App)
 
-Hello, my name isKevin. I'm gonna help you cook the dankest food.
+Hello, my name is Kevin. I'm here to help you cook!
 
 Kitchen Kevin (Mobile App) helps you find recipe based on what ingredients you have.
 

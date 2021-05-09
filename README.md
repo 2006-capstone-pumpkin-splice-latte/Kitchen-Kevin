@@ -4,6 +4,7 @@ Hello, my name is Kevin. I'm here to help you cook!
 
 Kitchen Kevin (Mobile App) helps you find recipe based on what ingredients you have.
 
+Demo video: https://youtu.be/E78yHS04a1s
 ---
 ## What to Install
 
